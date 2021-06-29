@@ -1,0 +1,75 @@
+﻿<Window x:Class="SteamManager.AccountManager"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SteamManager"
+        mc:Ignorable="d"
+        ResizeMode="CanMinimize"
+        Title="Steam Manager" Height="416" Width="543">
+    <Window.Resources>
+        <SolidColorBrush x:Key = "lightyellow" Color = "#fdff96" />
+        <SolidColorBrush x:Key = "darkyellow" Color = "#eef913" />
+        <SolidColorBrush x:Key = "lightgreen" Color = "#96ffa4" />
+        <SolidColorBrush x:Key = "darkgreen" Color = "#3eff5f" />
+        <DataTemplate DataType = "{x:Type local:SteamAccount}">
+
+            <Grid Margin="-3, 0, 0, 0" Background="{Binding BackgroundBrush}" Height="40" Width="434">
+
+                <Label FontSize="20" Width="343" Content = "{Binding Name}"></Label>
+
+                <Button Margin="290,0,84,0" Tag="{Binding Index}" BorderThickness="1, 1, 0, 0" Content="Export" FontFamily="Segoe UI Semibold" Foreground="#3c3c3c" Background="White"></Button>
+                <Button Margin="343,0,37,0" Tag="{Binding Index}" BorderThickness="0, 1, 1, 0" Content="Edit" FontFamily="Segoe UI Semibold" Foreground="#3c3c3c" Background="{StaticResource darkyellow}"></Button>
+                <Button Margin="390,0,0,0" Tag="{Binding Index}"  BorderThickness="0, 1, 0, 0" Content="Login" FontFamily="Segoe UI Semibold" Foreground="#3c3c3c" Background="{StaticResource darkgreen}"></Button>
+
+
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid x:Name="Base_Grid" Margin="0,0,0,1" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250*"/>
+        </Grid.ColumnDefinitions>
+        <Border BorderBrush="DimGray" BorderThickness="2,2,2,2"  HorizontalAlignment="Left" Height="277" Margin="38,42,0,0" VerticalAlignment="Top" Width="438" Grid.ColumnSpan="2">
+            <ScrollViewer HorizontalAlignment="Left" Height="273"  VerticalAlignment="Top" Width="455" Grid.ColumnSpan="2"   VerticalScrollBarVisibility="Auto" BorderBrush="DimGray" BorderThickness="0,2,0,2" >
+                <ItemsControl  ItemsSource = "{Binding}" ButtonBase.Click="Steam_StackPanel_Click" x:Name="Steam_StackPanel" HorizontalAlignment="Left"   Width="437">
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+        <Button Foreground="#FF2E2E2E" Content="Add" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="23" Margin="424,343,0,0" VerticalAlignment="Top" Width="52" Background="#FF1EAC10" Click="AddNewSteam" FontFamily="MS Reference Sans Serif"/>
+        <Label HorizontalContentAlignment="Center" Grid.ColumnSpan="2" Content="Saved Accounts" HorizontalAlignment="Left" Height="37" Margin="163,0,0,0" VerticalAlignment="Top" Width="193" FontSize="20"/>
+        <Button Content="Import" HorizontalAlignment="Left" Height="21" Margin="38,18,0,0" VerticalAlignment="Top" Width="48" Click="Button_Click"/>
+        <Button Content="Export" HorizontalAlignment="Left" Height="21" Margin="85,18,0,0" VerticalAlignment="Top" Width="49" Click="Button_Click_1"/>
+        <CheckBox x:Name="Run_Game" Checked="runGame_Checked" Unchecked="runGame_Unchecked" Content="Run game on login" Margin="38,326,350,27"/>
+        <CheckBox x:Name="Run_Commandline" Checked="launchParams_Checked" Unchecked="launchParams_Unchecked"  Content="Execute command-line on login" Margin="195,326,130,27"/>
+        <ComboBox  x:Name="Games_ComboBox"   HorizontalAlignment="Left" Height="23" Margin="38,343,0,0" VerticalAlignment="Top" Width="149" SelectionChanged="ComboBox_SelectionChanged" IsReadOnly="True">
+
+        </ComboBox>
+
+        <TextBox x:Name="launchParams" Height="23" Width="200" VerticalAlignment="Top" Margin="65,343,0,0" TextChanged="launchParams_TextChanged" FontSize="14" >
+            <TextBox.Style>
+                <Style TargetType="TextBox"  xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                    <Style.Resources>
+                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                            <VisualBrush.Visual>
+                                <Label Content="Game Command-Line Options" Foreground="Gray" />
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Style.Resources>
+                    <Style.Triggers>
+                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                        </Trigger>
+                        <Trigger Property="Text" Value="{x:Null}">
+                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter Property="Background" Value="White" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+
+    </Grid>
+</Window>

@@ -1,0 +1,25 @@
+﻿<Window x:Class="SteamManager.AddAccount"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SteamManager"
+        mc:Ignorable="d"
+        Title="Add Account" Height="341" Width="341">
+    <Grid Height="306" VerticalAlignment="Top" Margin="0,0,2,0">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Label Content="Add Steam Account" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="40" Margin="58,18,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="219" FontSize="20"/>
+        <TextBox x:Name="NewAccount_User" HorizontalAlignment="Left" Height="21" Margin="68,150,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="195" FontSize="13"/>
+        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Username" HorizontalAlignment="Left" Margin="68,120,0,0" VerticalAlignment="Top" Width="195" FontSize="18" Height="30"/>
+        <PasswordBox x:Name="NewAccount_Pass" HorizontalAlignment="Left" Height="22" Margin="68,203,0,0"  VerticalAlignment="Top" Width="195" FontSize="13"/>
+        <Label Content="Password" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="68,171,0,0" VerticalAlignment="Top" Width="195" FontSize="18" Height="32"/>
+        <Button Content="Save" HorizontalAlignment="Left" Height="23" Margin="137,260,0,0" VerticalAlignment="Top" Width="60" FontSize="14" Background="#FF24BF02" Click="NewAccount_Add" Foreground="#FF1B1B1B"/>
+        <TextBox x:Name="NewAccount_Name" HorizontalAlignment="Left" Height="23" Margin="68,98,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="195" FontSize="13"/>
+        <Label Content="Name" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="68,68,0,0" VerticalAlignment="Top" Width="195" FontSize="18" Height="30"/>
+    </Grid>
+</Window>
