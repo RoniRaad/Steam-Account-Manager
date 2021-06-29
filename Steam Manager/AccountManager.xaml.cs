@@ -3,74 +3,32 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using EncryptStringSample;
 using System.IO;
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-
+using SteamManager.Infrastructure;
+using SteamAccount;
 
 namespace SteamManager
 {
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
-    public class SteamAccount
-    {
-        private bool isEveryOther = false;
-
-        public bool IsEveryOther
-        {
-            set { isEveryOther = value; }
-        }
-
-        public SolidColorBrush BackgroundBrush
-        {
-            get { return (isEveryOther) ? Brushes.LightGray : Brushes.White; }
-        }
-
-        private string accountName;
-
-        public string Name
-        {
-            get { return accountName; }
-            set { accountName = value; }
-        }
-
-        private string userName;
-
-        public string UserName
-        {
-            get { return userName; }
-            set { userName = value; }
-        }
-
-        private string password;
-
-        public string Password
-        {
-            get { return password; }
-            set { password = value; }
-        }
-
-        private string index;
-
-        public string Index
-        {
-            get { return index; }
-            set { index = value; }
-        }
-    }
+ 
     public partial class AccountManager : Window
     {
-        List<SteamAccount> steamAccounts = new List<SteamAccount>();
+        List<SteamAccountViewModel> steamAccounts = new List<SteamAccountViewModel>();
         public bool debug = false;
         public static string password;
         public static List<string> games = new List<string>();
         DriveInfo steamDrive = DriveInfo.GetDrives()[0];
-        public AccountManager(string pass)
+        public IIOService _iOService { get; set; }
+        public IStringEncryptionService _stringEncryptionService { get; set; }
+        public AccountManager(string pass, IIOService iOService, IStringEncryptionService stringEncryptionService)
         {
-
+            _iOService = iOService;
+            _stringEncryptionService = stringEncryptionService;
             this.DataContext = steamAccounts;
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             InitializeComponent();
@@ -169,24 +127,24 @@ namespace SteamManager
                 for (int i = 0; i < files.Length; i++)
                 {
                     string f = files[i];
-                    string decryptor = StringCipher.Decrypt(File.ReadAllText(f), password);
+                    string decryptor = _stringEncryptionService.DecryptString(password, File.ReadAllText(f));
                     string[] data = decryptor.Split(delimiters);
                     if (count == 1)
                     {
                         count = 0;
-                        steamAccounts.Add(new SteamAccount { Name = data[0], UserName = data[1], Password = data[2], IsEveryOther = true, Index = i.ToString() });
+                        steamAccounts.Add(new SteamAccountViewModel { Name = data[0], UserName = data[1], Password = data[2], IsEveryOther = true, Index = i.ToString() });
 
                     }
                     else
                     {
                         count = 1;
-                        steamAccounts.Add(new SteamAccount { Name = data[0], UserName = data[1], Password = data[2], IsEveryOther = false, Index = i.ToString() });
+                        steamAccounts.Add(new SteamAccountViewModel { Name = data[0], UserName = data[1], Password = data[2], IsEveryOther = false, Index = i.ToString() });
 
                     }
 
                     void btn3_Click(object sender2, RoutedEventArgs e2)
                     {
-                        var Epass = new ExportPassword();
+                        var Epass = new ExportPassword(null, null);
                         Epass.SetPass(password);
                         Epass.SetFile(f);
                         Epass.Owner = this;
@@ -206,7 +164,7 @@ namespace SteamManager
                     }
                     void btn1_Click(object sender2, RoutedEventArgs e2)
                     {
-                        var editwin = new EditWindow(data, password);
+                        var editwin = new EditWindow(data, password.Trim(), null, null);
                         editwin.Show();
                         editwin.Owner = this;
                     }
@@ -224,7 +182,7 @@ namespace SteamManager
         }
         public void AddNewSteam(object sender, RoutedEventArgs e)
         {
-            var win2 = new AddAccount();
+            var win2 = new AddAccount(null, null);
             win2.SetPass(password);
             win2.Owner = this;
             win2.Show();
@@ -247,7 +205,7 @@ namespace SteamManager
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var IPass = new ImportPassword();
+            var IPass = new ImportPassword(null, null);
             IPass.SetPass(password);
             IPass.SetWindow(this);
             IPass.Show();
@@ -256,7 +214,7 @@ namespace SteamManager
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            var Epass = new ExportPassword();
+            var Epass = new ExportPassword(null, null);
             Epass.SetPass(password);
             Epass.SetLibrary(true);
             Epass.Show();
@@ -278,7 +236,7 @@ namespace SteamManager
             switch (((Button)e.OriginalSource).Content)
             {
                 case ("Export"):
-                    var Epass = new ExportPassword();
+                    var Epass = new ExportPassword(null, null);
                     Epass.SetPass(password);
                     // Epass.SetFile(files[i]); // i is found in e.Tag and files is a local variable that needs its scope changed
                     Epass.Owner = this;

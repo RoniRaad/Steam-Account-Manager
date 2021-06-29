@@ -12,11 +12,12 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using EncryptStringSample;
 using System.Diagnostics;
 using System.Windows.Navigation;
 using Microsoft;
 using Microsoft.Win32;
+using SteamAccount;
+using SteamManager.Infrastructure;
 
 namespace SteamManager
 {
@@ -25,9 +26,13 @@ namespace SteamManager
     /// </summary>
     public partial class ImportPassword : Window
     {
-
-        public ImportPassword()
+        public IOService _iOService { get; set; }
+        public IStringEncryptionService _stringEncryptionService { get; set; }
+        public ImportPassword(IOService iOService, IStringEncryptionService stringEncryptionService)
         {
+            _iOService = iOService;
+            _stringEncryptionService = stringEncryptionService;
+            
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             InitializeComponent();
         }
@@ -64,17 +69,17 @@ namespace SteamManager
                         for (int i = 0; i < files.Length; i++)
                         {
 
-                            string decryptor = StringCipher.Decrypt(files[i], IPass.Password);
+                            string decryptor = _stringEncryptionService.DecryptString(files[i], IPass.Password);
                             if (i == 0 && decryptor.Substring(0, 9) == "decrypted")
                             {
                                 decryptor = decryptor.Substring(9);
                                 string[] data = decryptor.Split(deli);
-                                File.WriteAllText($"C:\\Users\\{Environment.UserName}\\Documents\\Steam Manager\\Accounts\\{data[0].Replace(".", "").Replace("/", "").Replace("\\", "")}.txt", StringCipher.Encrypt(decryptor, Password));
+                                File.WriteAllText($"C:\\Users\\{Environment.UserName}\\Documents\\Steam Manager\\Accounts\\{data[0].Replace(".", "").Replace("/", "").Replace("\\", "")}.txt", _stringEncryptionService.EncryptString(decryptor, Password));
                             }
                             else if (i != 0)
                             {
                                 string[] data = decryptor.Split(deli);
-                                File.WriteAllText($"C:\\Users\\{Environment.UserName}\\Documents\\Steam Manager\\Accounts\\{data[0].Replace(".", "").Replace("/", "").Replace("\\", "")}.txt", StringCipher.Encrypt(decryptor, Password));
+                                File.WriteAllText($"C:\\Users\\{Environment.UserName}\\Documents\\Steam Manager\\Accounts\\{data[0].Replace(".", "").Replace("/", "").Replace("\\", "")}.txt", _stringEncryptionService.EncryptString(decryptor, Password));
                             }
                             else
                             {
@@ -87,10 +92,10 @@ namespace SteamManager
                     }
                     else if (System.IO.Path.GetFileName(fileDialog.FileName).Contains(".data"))
                     {
-                        string contents = StringCipher.Decrypt(File.ReadAllText(fileDialog.FileName), IPass.Password);
+                        string contents = _stringEncryptionService.DecryptString(File.ReadAllText(fileDialog.FileName), IPass.Password);
                         if (contents.Substring(0, 9) == "decrypted")
                         {
-                            File.WriteAllText($"C:\\Users\\{Environment.UserName}\\Documents\\Steam Manager\\Accounts\\{System.IO.Path.GetFileName(fileDialog.FileName).Replace(".data", ".txt").Replace("/", "").Replace("\\", "")}", StringCipher.Encrypt(contents.Substring(9), Password));
+                            File.WriteAllText($"C:\\Users\\{Environment.UserName}\\Documents\\Steam Manager\\Accounts\\{System.IO.Path.GetFileName(fileDialog.FileName).Replace(".data", ".txt").Replace("/", "").Replace("\\", "")}", _stringEncryptionService.EncryptString(contents.Substring(9), Password));
                             wnd.Start_SteamLoad();
                             this.Close();
                         }

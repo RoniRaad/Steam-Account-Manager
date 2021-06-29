@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SteamAccount
 {
-    public class StringEncryptionService
+    public class StringEncryptionService : IStringEncryptionService
     {
         public string EncryptString(string key, string plainText)
         {

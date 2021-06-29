@@ -3,11 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SteamManager"
+        xmlns:local="clr-namespace:SteamManager" 
         mc:Ignorable="d"
         Title="Login" Height="388.667" Width="583"
         ResizeMode="NoResize">
-
+    <Window.DataContext>
+        <local:LoginViewModel/>
+    </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30*"/>
@@ -20,7 +22,7 @@
         </Grid.ColumnDefinitions>
         <Button Content="Login" HorizontalAlignment="Left" Height="36" Margin="250,151.655,0,0" VerticalAlignment="Top" Width="75" Click="Login_Click" Grid.ColumnSpan="2" Grid.Row="1"/>
         <TextBox x:Name="Username_Box" HorizontalAlignment="Left" Height="24" Margin="130,35.655,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="317" Grid.ColumnSpan="2" FontSize="15" Grid.Row="1"/>
-        <Label x:Name="Main_Label" HorizontalContentAlignment="Center" Content="Sign In" HorizontalAlignment="Left" Height="64" Margin="187,21,0,0" VerticalAlignment="Top" Width="199" FontSize="25" Grid.ColumnSpan="2"/>
+        <Label x:Name="Main_Label" HorizontalContentAlignment="Center" Content="{Binding Title}" HorizontalAlignment="Left" Height="64" Margin="187,21,0,0" VerticalAlignment="Top" Width="199" FontSize="25" Grid.ColumnSpan="2"/>
         <PasswordBox x:Name="Password_Box" HorizontalAlignment="Left" Height="25" Margin="130,100.655,0,0" KeyDown="txtPassword_KeyDown" VerticalAlignment="Top" Width="317" Grid.ColumnSpan="2" FontSize="15" Grid.Row="1"/>
         <Label Content="Username&#xD;&#xA;" HorizontalAlignment="Left" Height="41" Margin="238,84,0,0" VerticalAlignment="Top" Width="100" Grid.ColumnSpan="2" FontSize="20" Grid.RowSpan="2"/>
         <Label Content="Password&#xA;" HorizontalAlignment="Left" Margin="238,59.655,0,110.71" Width="100" RenderTransformOrigin="4.417,0.113" FontSize="20" Grid.ColumnSpan="2" Grid.Row="1"/>

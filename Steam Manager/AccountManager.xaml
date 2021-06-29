@@ -12,7 +12,7 @@
         <SolidColorBrush x:Key = "darkyellow" Color = "#eef913" />
         <SolidColorBrush x:Key = "lightgreen" Color = "#96ffa4" />
         <SolidColorBrush x:Key = "darkgreen" Color = "#3eff5f" />
-        <DataTemplate DataType = "{x:Type local:SteamAccount}">
+        <DataTemplate DataType = "{x:Type local:SteamAccountViewModel}">
 
             <Grid Margin="-3, 0, 0, 0" Background="{Binding BackgroundBrush}" Height="40" Width="434">
 
@@ -21,7 +21,6 @@
                 <Button Margin="290,0,84,0" Tag="{Binding Index}" BorderThickness="1, 1, 0, 0" Content="Export" FontFamily="Segoe UI Semibold" Foreground="#3c3c3c" Background="White"></Button>
                 <Button Margin="343,0,37,0" Tag="{Binding Index}" BorderThickness="0, 1, 1, 0" Content="Edit" FontFamily="Segoe UI Semibold" Foreground="#3c3c3c" Background="{StaticResource darkyellow}"></Button>
                 <Button Margin="390,0,0,0" Tag="{Binding Index}"  BorderThickness="0, 1, 0, 0" Content="Login" FontFamily="Segoe UI Semibold" Foreground="#3c3c3c" Background="{StaticResource darkgreen}"></Button>
-
 
             </Grid>
         </DataTemplate>

@@ -12,7 +12,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using EncryptStringSample;
+using SteamAccount;
+using SteamManager.Infrastructure;
 
 namespace SteamManager
 {
@@ -23,8 +24,12 @@ namespace SteamManager
     {
         public static string[] data;
         string Password;
-        public EditWindow(string[] pass, string password)
+        public IOService _iOService { get; set; }
+        public IStringEncryptionService _stringEncryptionService { get; set; }
+        public EditWindow(string[] pass, string password, IOService iOService, IStringEncryptionService stringEncryptionService)
         {
+            _iOService = iOService;
+            _stringEncryptionService = stringEncryptionService;
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             InitializeComponent();
             data = pass;
@@ -40,7 +45,7 @@ namespace SteamManager
                 Directory.CreateDirectory("C:\\Users\\" + Environment.UserName + "\\Documents\\Steam Manager\\Accounts\\");
             }
             File.Delete($"C:\\Users\\{Environment.UserName}\\Documents\\Steam Manager\\Accounts\\{data[0]}.txt");
-            string write = StringCipher.Encrypt(EditAccount_Name.Text + ";" + EditAccount_User.Text + ";" + ((EditAccount_Pass.Password != "Password") ? EditAccount_Pass.Password : data[2]), Password);
+            string write = _stringEncryptionService.EncryptString(Password, EditAccount_Name.Text + ";" + EditAccount_User.Text + ";" + ((EditAccount_Pass.Password != "Password") ? EditAccount_Pass.Password : data[2]));
             File.WriteAllText($"C:\\Users\\{Environment.UserName}\\Documents\\Steam Manager\\Accounts\\{EditAccount_Name.Text}.txt", write);
             ((AccountManager)this.Owner).RefreshSteam();
             this.Close();

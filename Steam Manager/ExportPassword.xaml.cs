@@ -12,11 +12,12 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using EncryptStringSample;
 using System.Diagnostics;
 using System.Windows.Navigation;
 using Microsoft;
 using Microsoft.Win32;
+using SteamAccount;
+using SteamManager.Infrastructure;
 
 namespace SteamManager
 {
@@ -25,9 +26,12 @@ namespace SteamManager
     /// </summary>
     public partial class ExportPassword : Window
     {
-
-        public ExportPassword()
+        public IOService _iOService { get; set; }
+        public IStringEncryptionService _stringEncryptionService { get; set; }
+        public ExportPassword(IOService iOService, IStringEncryptionService stringEncryptionService)
         {
+            _iOService = iOService;
+            _stringEncryptionService = stringEncryptionService;
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             InitializeComponent();
         }
@@ -70,12 +74,12 @@ namespace SteamManager
                     {
                         if (count == 0)
                         {
-                            content = StringCipher.Encrypt("decrypted" + StringCipher.Decrypt(File.ReadAllText(f), Password), EPass.Password);
+                            content = _stringEncryptionService.EncryptString(EPass.Password, "decrypted" + _stringEncryptionService.DecryptString(Password, File.ReadAllText(f)));
                             count = 1;
                         }
                         else
                         {
-                            content = content + ";" + StringCipher.Encrypt(StringCipher.Decrypt(File.ReadAllText(f), Password), EPass.Password);
+                            content = content + ";" + _stringEncryptionService.EncryptString(EPass.Password, _stringEncryptionService.DecryptString(Password, File.ReadAllText(f)));
                         }
 
                     }
@@ -94,7 +98,7 @@ namespace SteamManager
                     if (fileDialog.ShowDialog() == true)
                     {
 
-                        File.WriteAllText(fileDialog.FileName + "\\" + System.IO.Path.GetFileName(file).Replace(".txt", ".data").Replace("/", "").Replace("\\", ""), StringCipher.Encrypt("decrypted" + StringCipher.Decrypt(File.ReadAllText(file), Password), EPass.Password));
+                        File.WriteAllText(fileDialog.FileName + "\\" + System.IO.Path.GetFileName(file).Replace(".txt", ".data").Replace("/", "").Replace("\\", ""), _stringEncryptionService.EncryptString(EPass.Password, "decrypted" + _stringEncryptionService.DecryptString(Password, File.ReadAllText(file))));
                         this.Close();
 
                     }

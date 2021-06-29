@@ -13,7 +13,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using EncryptStringSample;
+using SteamAccount;
+using SteamManager.Infrastructure;
 
 namespace SteamManager
 {
@@ -22,9 +23,12 @@ namespace SteamManager
     /// </summary>
     public partial class AddAccount : Window
     {
-
-        public AddAccount()
+        public IOService _iOService { get; set; }
+        public IStringEncryptionService _stringEncryptionService { get; set; }
+        public AddAccount(IOService iOService, IStringEncryptionService stringEncryptionService)
         {
+            _iOService = iOService;
+            _stringEncryptionService = stringEncryptionService;
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             InitializeComponent();
         }
@@ -43,7 +47,7 @@ namespace SteamManager
             {
                 Directory.CreateDirectory("C:\\Users\\" + Environment.UserName + "\\Documents\\Steam Manager\\Accounts\\");
             }
-            string write = StringCipher.Encrypt(NewAccount_Name.Text + ";" + NewAccount_User.Text + ";" + NewAccount_Pass.Password, Password);
+            string write = _stringEncryptionService.EncryptString(Password, NewAccount_Name.Text + ";" + NewAccount_User.Text + ";" + NewAccount_Pass.Password);
             File.WriteAllText($"C:\\Users\\{Environment.UserName}\\Documents\\Steam Manager\\Accounts\\{NewAccount_Name.Text}.txt", write);
             ((AccountManager)this.Owner).RefreshSteam();
             this.Close();
