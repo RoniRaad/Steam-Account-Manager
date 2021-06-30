@@ -4,7 +4,7 @@
     {
         void InitializeData(string password);
         string ReadData(string password);
-        void UpdateData();
+        void UpdateData(string data);
         bool ValidateData();
         string GetEncryptedUsername();
     }

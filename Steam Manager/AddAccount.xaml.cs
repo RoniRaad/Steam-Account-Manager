@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using SteamAccount;
 using SteamManager.Infrastructure;
+using System.Text.Json;
 
 namespace SteamManager
 {
@@ -23,10 +24,12 @@ namespace SteamManager
     /// </summary>
     public partial class AddAccount : Window
     {
+        public SteamAccountViewModel _newAccount { get; set; }
         public IOService _iOService { get; set; }
         public IStringEncryptionService _stringEncryptionService { get; set; }
         public AddAccount(IOService iOService, IStringEncryptionService stringEncryptionService)
         {
+            this.DataContext = _newAccount;
             _iOService = iOService;
             _stringEncryptionService = stringEncryptionService;
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
@@ -38,17 +41,12 @@ namespace SteamManager
         public void SetPass(string p)
         {
             Password = p;
-
-
         }
         private void NewAccount_Add(object sender, RoutedEventArgs e)
         {
-            if (!Directory.Exists("C:\\Users\\" + Environment.UserName + "\\Documents\\Steam Manager\\Accounts"))
-            {
-                Directory.CreateDirectory("C:\\Users\\" + Environment.UserName + "\\Documents\\Steam Manager\\Accounts\\");
-            }
-            string write = _stringEncryptionService.EncryptString(Password, NewAccount_Name.Text + ";" + NewAccount_User.Text + ";" + NewAccount_Pass.Password);
-            File.WriteAllText($"C:\\Users\\{Environment.UserName}\\Documents\\Steam Manager\\Accounts\\{NewAccount_Name.Text}.txt", write);
+            List<SteamAccountViewModel> accounts = JsonSerializer.Deserialize<List<SteamAccountViewModel>>(_iOService.ReadData(Password));
+            accounts.Add(_newAccount);
+            _iOService.UpdateData(JsonSerializer.Serialize(accounts));
             ((AccountManager)this.Owner).RefreshSteam();
             this.Close();
         }

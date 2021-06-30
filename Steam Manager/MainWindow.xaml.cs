@@ -23,9 +23,9 @@ namespace SteamManager
     public partial class MainWindow : Window
     {
         private LoginViewModel _loginViewModel { get; set; }
-        public IIOService _iOService { get; set; }
-        public IStringEncryptionService _stringEncryptionService { get; set; }
-        public AccountManager _accountManager { get; set; }
+        private IIOService _iOService { get; set; }
+        private IStringEncryptionService _stringEncryptionService { get; set; }
+        private AccountManager _accountManager { get; set; }
         public MainWindow(IIOService iOService, IStringEncryptionService stringEncryptionService, AccountManager accountManager)
         {
             _accountManager = accountManager;
@@ -62,8 +62,8 @@ namespace SteamManager
         {
 
  
-            string Username = (this.DataContext as LoginViewModel).Username;
-            string Password = (this.DataContext as LoginViewModel).Password;
+            string Username = _loginViewModel.Username;
+            string Password = _stringEncryptionService.Hash(_loginViewModel.Password);
 
             string decryptData = _iOService.ReadData(Password);
 
@@ -72,6 +72,7 @@ namespace SteamManager
                 _loginViewModel.ErrorMessage = "Username or Password Incorrect!";
             }
 
+            _accountManager.SerializedData = decryptData;
             _accountManager.Show();
             this.Close();
             //string data = File.ReadAllText("C:\\Users\\" + Environment.UserName + "\\Documents\\Steam Manager\\logindata.txt");

@@ -17,7 +17,6 @@ namespace SteamManager.Infrastructure
         public IOService(IStringEncryptionService stringEncryptionService)
         {
             _stringEncryptionService = stringEncryptionService;
-            ValidateData();
         }
 
         public bool ValidateData()
@@ -34,9 +33,9 @@ namespace SteamManager.Infrastructure
             }
         }
 
-        public void UpdateData()
+        public void UpdateData(string data)
         {
-
+            File.WriteAllText($"{_dataPath}\\data.dat", data);
         }
 
         public string ReadData(string password)
