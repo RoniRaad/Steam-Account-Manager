@@ -14,6 +14,7 @@ using System;
 using SteamManager;
 using SteamAccount;
 using SteamManager.Infrastructure;
+using System.Text.Json;
 
 namespace SteamManager
 {
@@ -32,11 +33,10 @@ namespace SteamManager
             _iOService = iOService;
             _stringEncryptionService = stringEncryptionService;
             _loginViewModel = new LoginViewModel();
+            this.DataContext = _loginViewModel;
 
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             InitializeComponent();
-
-            this.DataContext = _loginViewModel;
 
             if (_iOService.ValidateData())
             {
@@ -46,7 +46,6 @@ namespace SteamManager
             {
                 _loginViewModel.Title = "Register";
             }
-
 
 
         }
@@ -63,7 +62,9 @@ namespace SteamManager
 
  
             string Username = _loginViewModel.Username;
-            string Password = _stringEncryptionService.Hash(_loginViewModel.Password);
+            string Password;
+
+            Password = _stringEncryptionService.Hash((string)Password_Box.Password);
 
             string decryptData = _iOService.ReadData(Password);
 
@@ -71,34 +72,14 @@ namespace SteamManager
             {
                 _loginViewModel.ErrorMessage = "Username or Password Incorrect!";
             }
-
-            _accountManager.SerializedData = decryptData;
-            _accountManager.Show();
-            this.Close();
-            //string data = File.ReadAllText("C:\\Users\\" + Environment.UserName + "\\Documents\\Steam Manager\\logindata.txt");
-            //char[] delimiter = { ';' };
-            //string[] split = data.Split(delimiter);
-            /*try
+            else
             {
-                if (Username == StringCipher.Decrypt(split[0], Password))
-                {
-                    File.WriteAllText("C:\\Users\\" + Environment.UserName + "\\Documents\\Steam Manager\\username.txt", Username);
-                    var win1 = new AccountManager(Password);
-                    win1.Show();
-                    this.Close();
-                    if (debug) MessageBox.Show($"Login Successful");
-                }
-                else
-                {
-                    Error_Label.Content = "Incorrect Username or Password";
-                    if (debug) MessageBox.Show($"Incorrect Username or Password");
-                }
+                _accountManager.Password = Password;
+                _accountManager.RefreshSteam();
+                _accountManager.Show();
+                this.Close();
             }
-            catch (Exception ex)
-            {
-                Error_Label.Content = "Incorrect Username or Password";
-                if (debug) MessageBox.Show(ex.ToString());
-            }*/
+
         }
     }
 }

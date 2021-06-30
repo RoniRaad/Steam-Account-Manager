@@ -32,9 +32,10 @@ namespace SteamManager
 
         private void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IIOService, IOService>();
-            services.AddTransient<IStringEncryptionService, StringEncryptionService>();
+            services.AddSingleton<IIOService, IOService>();
+            services.AddSingleton<IStringEncryptionService, StringEncryptionService>();
             services.AddSingleton<MainWindow>();
+            services.AddSingleton<AccountManager>();
         }
 
         protected override async void OnStartup(StartupEventArgs e)

@@ -14,7 +14,7 @@
         <SolidColorBrush x:Key = "darkgreen" Color = "#3eff5f" />
         <DataTemplate DataType = "{x:Type local:SteamAccountViewModel}">
 
-            <Grid Margin="-3, 0, 0, 0" Background="{Binding BackgroundBrush}" Height="40" Width="434">
+            <Grid Margin="-3, 0, 0, 0" Height="40" Width="434">
 
                 <Label FontSize="20" Width="343" Content = "{Binding Name}"></Label>
 

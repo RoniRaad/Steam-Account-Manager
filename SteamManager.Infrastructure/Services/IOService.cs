@@ -25,40 +25,37 @@ namespace SteamManager.Infrastructure
             if (!Directory.Exists(_dataPath))
             {
                 Directory.CreateDirectory(_dataPath);
+            }
+            if (!File.Exists($"{_dataPath}\\data.dat"))
                 return false;
-            }
             else
-            {
                 return true;
-            }
+
         }
 
-        public void UpdateData(string data)
+        public void UpdateData(string data, string password)
         {
-            File.WriteAllText($"{_dataPath}\\data.dat", data);
+            File.WriteAllText($"{_dataPath}\\data.dat", _stringEncryptionService.EncryptString(password ,data));
         }
 
         public string ReadData(string password)
 {
             if (!File.Exists($"{_dataPath}\\data.dat"))
             {
-                InitializeData(password);
-                return "{}";
+                    InitializeData(password);
+                    return "[]";
+
             }
-            string encryptedData = File.ReadAllText($"{_dataPath}\\data.dat");
-            try
-            {
+
+                string encryptedData = File.ReadAllText($"{_dataPath}\\data.dat");
+                string decryptedData = _stringEncryptionService.DecryptString(password, encryptedData);
                 return _stringEncryptionService.DecryptString(password, encryptedData);
-            }
-            catch
-            {
-                return "";
-            }
+
 
         }
         public void InitializeData(string password)
         {
-            File.WriteAllText($"{_dataPath}\\data.dat", _stringEncryptionService.EncryptString(password, "{}"));
+            File.WriteAllText($"{_dataPath}\\data.dat", _stringEncryptionService.EncryptString(password, "[]"));
         }
 
         public string GetEncryptedUsername()

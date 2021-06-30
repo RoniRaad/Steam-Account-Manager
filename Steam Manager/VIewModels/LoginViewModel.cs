@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SteamManager
 {
-    class LoginViewModel
+    public class LoginViewModel
     {
         public string Title { get; set; }
         public string Username { get; set; }

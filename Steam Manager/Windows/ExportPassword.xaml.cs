@@ -26,9 +26,9 @@ namespace SteamManager
     /// </summary>
     public partial class ExportPassword : Window
     {
-        public IOService _iOService { get; set; }
+        public IIOService _iOService { get; set; }
         public IStringEncryptionService _stringEncryptionService { get; set; }
-        public ExportPassword(IOService iOService, IStringEncryptionService stringEncryptionService)
+        public ExportPassword(IIOService iOService, IStringEncryptionService stringEncryptionService)
         {
             _iOService = iOService;
             _stringEncryptionService = stringEncryptionService;

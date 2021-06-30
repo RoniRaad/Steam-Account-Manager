@@ -26,9 +26,9 @@ namespace SteamManager
     /// </summary>
     public partial class ImportPassword : Window
     {
-        public IOService _iOService { get; set; }
+        public IIOService _iOService { get; set; }
         public IStringEncryptionService _stringEncryptionService { get; set; }
-        public ImportPassword(IOService iOService, IStringEncryptionService stringEncryptionService)
+        public ImportPassword(IIOService iOService, IStringEncryptionService stringEncryptionService)
         {
             _iOService = iOService;
             _stringEncryptionService = stringEncryptionService;
@@ -87,7 +87,7 @@ namespace SteamManager
                                 return;
                             }
                         }
-                        wnd.Start_SteamLoad();
+                        wnd.RefreshSteam();
                         this.Close();
                     }
                     else if (System.IO.Path.GetFileName(fileDialog.FileName).Contains(".data"))
@@ -96,7 +96,7 @@ namespace SteamManager
                         if (contents.Substring(0, 9) == "decrypted")
                         {
                             File.WriteAllText($"C:\\Users\\{Environment.UserName}\\Documents\\Steam Manager\\Accounts\\{System.IO.Path.GetFileName(fileDialog.FileName).Replace(".data", ".txt").Replace("/", "").Replace("\\", "")}", _stringEncryptionService.EncryptString(contents.Substring(9), Password));
-                            wnd.Start_SteamLoad();
+                            wnd.RefreshSteam();
                             this.Close();
                         }
                         else

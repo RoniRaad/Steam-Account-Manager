@@ -7,9 +7,6 @@
         mc:Ignorable="d"
         Title="Login" Height="388.667" Width="583"
         ResizeMode="NoResize">
-    <Window.DataContext>
-        <local:LoginViewModel/>
-    </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30*"/>
@@ -26,7 +23,7 @@
         <PasswordBox x:Name="Password_Box" HorizontalAlignment="Left" Height="25" Margin="130,100.655,0,0" KeyDown="txtPassword_KeyDown" VerticalAlignment="Top" Width="317" Grid.ColumnSpan="2" FontSize="15" Grid.Row="1"/>
         <Label Content="Username&#xD;&#xA;" HorizontalAlignment="Left" Height="41" Margin="238,84,0,0" VerticalAlignment="Top" Width="100" Grid.ColumnSpan="2" FontSize="20" Grid.RowSpan="2"/>
         <Label Content="Password&#xA;" HorizontalAlignment="Left" Margin="238,59.655,0,110.71" Width="100" RenderTransformOrigin="4.417,0.113" FontSize="20" Grid.ColumnSpan="2" Grid.Row="1"/>
-        <Label x:Name="Error_Label" HorizontalContentAlignment="Center"  Content="{Binding ErrorMessage}" HorizontalAlignment="Left" Margin="184,62,0,0" VerticalAlignment="Top" FontSize="9" Background="White" FontStyle="Italic" Width="209" Grid.ColumnSpan="2" Height="25"/>
+        <Label HorizontalContentAlignment="Center"  Content="{Binding ErrorMessage}" HorizontalAlignment="Left" Margin="184,62,0,0" VerticalAlignment="Top" FontSize="9" Foreground="Red" Background="White" FontStyle="Italic" Width="209" Grid.ColumnSpan="2" Height="25"/>
         <Label FontSize="10"  Content="Created by Smoku" Grid.Column="1" HorizontalAlignment="Left" Height="24" Margin="192.255,31.29,0,0" VerticalAlignment="Top" Width="94" Grid.Row="2"/>
         <Label FontSize="10"  Content="Version: 0.71" HorizontalAlignment="Left" Height="24" Margin="1,31.29,0,0" VerticalAlignment="Top" Width="94" Grid.Row="2"/>
 

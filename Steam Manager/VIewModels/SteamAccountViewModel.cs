@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
@@ -15,7 +16,7 @@ namespace SteamManager
         {
             set { isEveryOther = value; }
         }
-
+        [JsonIgnore]
         public SolidColorBrush BackgroundBrush
         {
             get { return (isEveryOther) ? Brushes.LightGray : Brushes.White; }

@@ -25,10 +25,13 @@ namespace SteamManager
     public partial class AddAccount : Window
     {
         public SteamAccountViewModel _newAccount { get; set; }
-        public IOService _iOService { get; set; }
+        public IIOService _iOService { get; set; }
         public IStringEncryptionService _stringEncryptionService { get; set; }
-        public AddAccount(IOService iOService, IStringEncryptionService stringEncryptionService)
+        public AddAccount(IIOService iOService, IStringEncryptionService stringEncryptionService)
         {
+            _newAccount = new SteamAccountViewModel();
+            _iOService = iOService;
+            _stringEncryptionService = stringEncryptionService;
             this.DataContext = _newAccount;
             _iOService = iOService;
             _stringEncryptionService = stringEncryptionService;
@@ -42,11 +45,14 @@ namespace SteamManager
         {
             Password = p;
         }
-        private void NewAccount_Add(object sender, RoutedEventArgs e)
+        public void NewAccount_Add(object sender, RoutedEventArgs e)
         {
             List<SteamAccountViewModel> accounts = JsonSerializer.Deserialize<List<SteamAccountViewModel>>(_iOService.ReadData(Password));
+            _newAccount.IsEveryOther = false;
+            _newAccount.Index = accounts.Count().ToString();
+            _newAccount.Password = NewAccount_Pass.Password;
             accounts.Add(_newAccount);
-            _iOService.UpdateData(JsonSerializer.Serialize(accounts));
+            _iOService.UpdateData(JsonSerializer.Serialize(accounts), Password);
             ((AccountManager)this.Owner).RefreshSteam();
             this.Close();
         }

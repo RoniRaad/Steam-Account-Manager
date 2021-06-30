@@ -21,29 +21,27 @@ namespace SteamManager
         public string SerializedData { get; set; }
         private List<SteamAccountViewModel> _steamAccounts = new List<SteamAccountViewModel>();
         public bool debug = false;
-        public static string password;
+        public string Password { private get; set; }
         public static List<string> games = new List<string>();
         DriveInfo steamDrive = DriveInfo.GetDrives()[0];
         public IIOService _iOService { get; set; }
         public IStringEncryptionService _stringEncryptionService { get; set; }
-        public AccountManager(string pass, IIOService iOService, IStringEncryptionService stringEncryptionService)
+        public AccountManager(IIOService iOService, IStringEncryptionService stringEncryptionService)
         {
             _iOService = iOService;
             _stringEncryptionService = stringEncryptionService;
             this.DataContext = _steamAccounts;
-            _steamAccounts = JsonSerializer.Deserialize<List<SteamAccountViewModel>>(SerializedData);
+           // _steamAccounts = JsonSerializer.Deserialize<List<SteamAccountViewModel>>(SerializedData);
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             InitializeComponent();
-            password = pass;
 
-            StartSteamLoad();
+           // StartSteamLoad();
         }
         
         private void StartSteamLoad()
         {
-            _steamAccounts = JsonSerializer.Deserialize<List<SteamAccountViewModel>>(_iOService.ReadData(password));
-
-           
+            _steamAccounts = JsonSerializer.Deserialize<List<SteamAccountViewModel>>(_iOService.ReadData(Password));
+            this.DataContext = _steamAccounts;
         }
         public void RefreshSteam()
         {
@@ -51,8 +49,8 @@ namespace SteamManager
         }
         public void AddNewSteam(object sender, RoutedEventArgs e)
         {
-            var win2 = new AddAccount(null, null);
-            win2.SetPass(password);
+            var win2 = new AddAccount(_iOService, _stringEncryptionService);
+            win2.SetPass(Password);
             win2.Owner = this;
             win2.Show();
         }
@@ -74,8 +72,8 @@ namespace SteamManager
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var IPass = new ImportPassword(null, null);
-            IPass.SetPass(password);
+            var IPass = new ImportPassword(_iOService, _stringEncryptionService);
+            IPass.SetPass(Password);
             IPass.SetWindow(this);
             IPass.Show();
             IPass.Owner = this;
@@ -83,8 +81,8 @@ namespace SteamManager
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            var Epass = new ExportPassword(null, null);
-            Epass.SetPass(password);
+            var Epass = new ExportPassword(_iOService, _stringEncryptionService);
+            Epass.SetPass(Password);
             Epass.SetLibrary(true);
             Epass.Show();
             Epass.Owner = this;
@@ -105,8 +103,8 @@ namespace SteamManager
             switch (((Button)e.OriginalSource).Content)
             {
                 case ("Export"):
-                    var Epass = new ExportPassword(null, null);
-                    Epass.SetPass(password);
+                    var Epass = new ExportPassword(_iOService, _stringEncryptionService);
+                    Epass.SetPass(Password);
                     // Epass.SetFile(files[i]); // i is found in e.Tag and files is a local variable that needs its scope changed
                     Epass.Owner = this;
                     Epass.Show();
