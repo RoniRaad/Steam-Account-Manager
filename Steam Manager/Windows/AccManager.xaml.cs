@@ -15,32 +15,34 @@ namespace SteamManager
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
- 
-    public partial class AccountManager : Window
+
+    public partial class AccManager : Window
     {
         public string SerializedData { get; set; }
-        private List<SteamAccountViewModel> _steamAccounts = new List<SteamAccountViewModel>();
+        private IList<SteamAccountViewModel> _steamAccounts = new List<SteamAccountViewModel>();
         public bool debug = false;
         public string Password { private get; set; }
         public static List<string> games = new List<string>();
         DriveInfo steamDrive = DriveInfo.GetDrives()[0];
         public IIOService _iOService { get; set; }
         public IStringEncryptionService _stringEncryptionService { get; set; }
-        public AccountManager(IIOService iOService, IStringEncryptionService stringEncryptionService)
+        public IAccountManagerController _acManagerController { get; set; }
+        public AccManager(IIOService iOService, IStringEncryptionService stringEncryptionService, IAccountManagerController acManagerController)
         {
             _iOService = iOService;
             _stringEncryptionService = stringEncryptionService;
+            _acManagerController = acManagerController;
+
             this.DataContext = _steamAccounts;
-           // _steamAccounts = JsonSerializer.Deserialize<List<SteamAccountViewModel>>(SerializedData);
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+
             InitializeComponent();
 
-           // StartSteamLoad();
         }
-        
+
         private void StartSteamLoad()
         {
-            _steamAccounts = JsonSerializer.Deserialize<List<SteamAccountViewModel>>(_iOService.ReadData(Password));
+            _steamAccounts = _acManagerController.GetSteamAccountViewModels(Password);
             this.DataContext = _steamAccounts;
         }
         public void RefreshSteam()
@@ -53,22 +55,6 @@ namespace SteamManager
             win2.SetPass(Password);
             win2.Owner = this;
             win2.Show();
-        }
-        private void runGame_Checked(object sender, RoutedEventArgs e)
-        {
-            //SetSetting("startGame", "1");
-        }
-        private void runGame_Unchecked(object sender, RoutedEventArgs e)
-        {
-            //SetSetting("startGame", "0");
-        }
-        private void launchParams_Checked(object sender, RoutedEventArgs e)
-        {
-           // SetSetting("launchParam", "1");
-        }
-        private void launchParams_Unchecked(object sender, RoutedEventArgs e)
-        {
-           // SetSetting("launchParam", "0");
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -90,7 +76,7 @@ namespace SteamManager
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-           // SetSetting("selectedGame", Games_ComboBox.SelectedItem.ToString());
+            // SetSetting("selectedGame", Games_ComboBox.SelectedItem.ToString());
             //launchParams.Text = GetSetting("launchParam_" + Games_ComboBox.SelectedItem.ToString(), "");
         }
         private void launchParams_TextChanged(object sender, TextChangedEventArgs e)

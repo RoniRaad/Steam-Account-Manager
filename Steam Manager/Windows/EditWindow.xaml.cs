@@ -47,14 +47,14 @@ namespace SteamManager
             File.Delete($"C:\\Users\\{Environment.UserName}\\Documents\\Steam Manager\\Accounts\\{data[0]}.txt");
             string write = _stringEncryptionService.EncryptString(Password, EditAccount_Name.Text + ";" + EditAccount_User.Text + ";" + ((EditAccount_Pass.Password != "Password") ? EditAccount_Pass.Password : data[2]));
             File.WriteAllText($"C:\\Users\\{Environment.UserName}\\Documents\\Steam Manager\\Accounts\\{EditAccount_Name.Text}.txt", write);
-            ((AccountManager)this.Owner).RefreshSteam();
+            ((AccManager)this.Owner).RefreshSteam();
             this.Close();
         }
 
         private void EditAccount_Remove(object sender, RoutedEventArgs e)
         {
             File.Delete($"C:\\Users\\{Environment.UserName}\\Documents\\Steam Manager\\Accounts\\{data[0]}.txt");
-            ((AccountManager)this.Owner).RefreshSteam();
+            ((AccManager)this.Owner).RefreshSteam();
             this.Close();
         }
     }

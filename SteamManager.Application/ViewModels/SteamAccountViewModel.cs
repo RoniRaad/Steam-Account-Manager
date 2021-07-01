@@ -1,53 +1,42 @@
-﻿using System;
+﻿using SteamManager.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace SteamManager
 {
     public class SteamAccountViewModel
     {
+        public SteamAccountModel Model { get; set; } = new SteamAccountModel();
+
         private bool isEveryOther = false;
 
         public bool IsEveryOther
         {
             set { isEveryOther = value; }
         }
-        [JsonIgnore]
-        public SolidColorBrush BackgroundBrush
-        {
-            get { return (isEveryOther) ? Brushes.LightGray : Brushes.White; }
-        }
-
-        private string accountName;
 
         public string Name
         {
-            get { return accountName; }
-            set { accountName = value; }
+            get { return Model.DisplayName; }
+            set { Model.DisplayName = value; }
         }
-
-        private string userName;
 
         public string UserName
         {
-            get { return userName; }
-            set { userName = value; }
+            get { return Model.UserName; }
+            set { Model.UserName = value; }
         }
-
-        private string password;
 
         public string Password
         {
-            get { return password; }
-            set { password = value; }
+            get { return Model.Password; }
+            set { Model.Password = value; }
         }
-
         private string index;
-
         public string Index
         {
             get { return index; }

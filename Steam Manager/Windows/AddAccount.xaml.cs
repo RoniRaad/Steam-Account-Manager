@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -53,7 +52,7 @@ namespace SteamManager
             _newAccount.Password = NewAccount_Pass.Password;
             accounts.Add(_newAccount);
             _iOService.UpdateData(JsonSerializer.Serialize(accounts), Password);
-            ((AccountManager)this.Owner).RefreshSteam();
+            ((AccManager)this.Owner).RefreshSteam();
             this.Close();
         }
     }

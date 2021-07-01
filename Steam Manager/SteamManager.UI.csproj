@@ -5,9 +5,12 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <RootNamespace>Steam_Manager</RootNamespace>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon />
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SteamManager.Application\SteamManager.Application.csproj" />
     <ProjectReference Include="..\SteamManager.Infrastructure\SteamManager.Infrastructure.csproj" />
   </ItemGroup>
 

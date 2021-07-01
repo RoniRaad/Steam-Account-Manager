@@ -45,8 +45,8 @@ namespace SteamManager
 
 
         }
-        AccountManager wnd;
-        public void SetWindow(AccountManager window)
+        AccManager wnd;
+        public void SetWindow(AccManager window)
         {
             wnd = window;
         }

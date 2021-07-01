@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Steam_Manager.Models
+namespace SteamManager.Models
 {
-    class SteamAccountModel
+    public class SteamAccountModel : ISteamAccountModel
     {
         public string UserName { get; set; }
 
