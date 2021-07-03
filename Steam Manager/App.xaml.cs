@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SteamAccount;
+using SteamManager.Application.Controllers;
+using SteamManager.Application.ViewModels;
 using SteamManager.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -15,7 +17,7 @@ namespace SteamManager
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : System.Windows.Application
     {
         private readonly IHost _host;
 
@@ -35,11 +37,13 @@ namespace SteamManager
             services.AddTransient<IIOService, IOService>();
             services.AddTransient<IStringEncryptionService, StringEncryptionService>();
             services.AddTransient<IAccountManagerController, AccountManagerController>();
+            services.AddTransient<ILoginController, LoginController>();
+            services.AddTransient<IAccountManagerViewModel, AccountManagerViewModel>();
             services.AddSingleton<MainWindow>();
             services.AddSingleton<AccManager>();
         }
 
-        protected override async void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e) 
         {
             await _host.StartAsync();
 

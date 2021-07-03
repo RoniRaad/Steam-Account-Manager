@@ -15,6 +15,7 @@ using SteamManager;
 using SteamAccount;
 using SteamManager.Infrastructure;
 using System.Text.Json;
+using SteamManager.Application.Controllers;
 
 namespace SteamManager
 {
@@ -27,25 +28,18 @@ namespace SteamManager
         private IIOService _iOService { get; set; }
         private IStringEncryptionService _stringEncryptionService { get; set; }
         private AccManager _accountManager { get; set; }
-        public MainWindow(IIOService iOService, IStringEncryptionService stringEncryptionService, AccManager accountManager)
+        public ILoginController _loginController { get; set; }
+        public MainWindow(IIOService iOService, IStringEncryptionService stringEncryptionService, ILoginController loginController, AccManager accountManager)
         {
             _accountManager = accountManager;
             _iOService = iOService;
             _stringEncryptionService = stringEncryptionService;
-            _loginViewModel = new LoginViewModel();
+            _loginController = loginController;
+            _loginViewModel = _loginController.GetViewModel();
             this.DataContext = _loginViewModel;
 
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             InitializeComponent();
-
-            if (_iOService.ValidateData())
-            {
-                _loginViewModel.Title = "Login";
-            }
-            else
-            {
-                _loginViewModel.Title = "Register";
-            }
 
 
         }
@@ -59,22 +53,13 @@ namespace SteamManager
         }
         private void Login_Click(object sender, RoutedEventArgs e)
         {
+            _loginViewModel.Password = Password_Box.Password;
 
- 
-            string Username = _loginViewModel.Username;
-            string Password;
+            string hashedPassword = _loginController.HandleLogin(_loginViewModel);
 
-            Password = _stringEncryptionService.Hash((string)Password_Box.Password);
-
-            string decryptData = _iOService.ReadData(Password);
-
-            if (decryptData.Length == 0)
+            if (hashedPassword.Length != 0)
             {
-                _loginViewModel.ErrorMessage = "Username or Password Incorrect!";
-            }
-            else
-            {
-                _accountManager.Password = Password;
+                _accountManager.Password = hashedPassword;
                 _accountManager.RefreshSteam();
                 _accountManager.Show();
                 this.Close();

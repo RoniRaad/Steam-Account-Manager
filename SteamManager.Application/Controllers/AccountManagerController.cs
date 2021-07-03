@@ -2,6 +2,7 @@
 using SteamManager.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -17,12 +18,12 @@ namespace SteamManager
         {
             _iOService = iOService;
         }
-        public List<SteamAccountViewModel> GetSteamAccountViewModels(string Password)
+        public ObservableCollection<SteamAccountViewModel> GetSteamAccountViewModels(string Password)
         {
-            List<SteamAccountViewModel> steamAccountViewModels = new List<SteamAccountViewModel>();
+            ObservableCollection<SteamAccountViewModel> steamAccountViewModels = new ObservableCollection<SteamAccountViewModel>();
 
             string decryptedData = _iOService.ReadData(Password);
-            List<SteamAccountModel> steamAccountModels = JsonSerializer.Deserialize<List<SteamAccountModel>>(decryptedData);
+            ObservableCollection<SteamAccountModel> steamAccountModels = JsonSerializer.Deserialize<ObservableCollection<SteamAccountModel>>(decryptedData);
 
             int index = 0;
             foreach (SteamAccountModel steamAccount in steamAccountModels)
@@ -35,6 +36,14 @@ namespace SteamManager
             }
 
             return steamAccountViewModels;
+        }
+
+        public void AddSteamAccountViewModel(string password, SteamAccountViewModel newAccount)
+        {
+            ObservableCollection<SteamAccountViewModel> accounts = GetSteamAccountViewModels(password);
+            newAccount.Index = accounts.Count().ToString();
+            accounts.Add(newAccount);
+            _iOService.UpdateData(JsonSerializer.Serialize(accounts), password);
         }
     }
 }

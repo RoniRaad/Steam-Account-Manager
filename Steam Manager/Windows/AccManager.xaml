@@ -21,7 +21,7 @@
         </Grid.ColumnDefinitions>
         <Border BorderBrush="DimGray" BorderThickness="2,2,2,2"  HorizontalAlignment="Left" Height="277" Margin="38,42,0,0" VerticalAlignment="Top" Width="438" Grid.ColumnSpan="2">
             <ScrollViewer HorizontalAlignment="Left" Height="273"  VerticalAlignment="Top" Width="455" Grid.ColumnSpan="2"   VerticalScrollBarVisibility="Auto" BorderBrush="DimGray" BorderThickness="0,2,0,2" >
-                <ItemsControl  ItemsSource = "{Binding}" ButtonBase.Click="Steam_StackPanel_Click" x:Name="Steam_StackPanel" HorizontalAlignment="Left"   Width="437" AlternationCount="2">
+                <ItemsControl  ItemsSource = "{Binding SteamAccountViewModels}" ButtonBase.Click="Steam_StackPanel_Click" x:Name="Steam_StackPanel" HorizontalAlignment="Left"   Width="437" AlternationCount="2">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType = "{x:Type vm:SteamAccountViewModel}">
 
@@ -29,9 +29,9 @@
 
                                 <Label FontSize="20" Width="343" Content = "{Binding UserName}"></Label>
 
-                                <Button Margin="290,0,84,0" Tag="{Binding Index}" BorderThickness="1, 1, 0, 1" Content="Export" FontFamily="Segoe UI Semibold" Foreground="#3c3c3c" Background="White"></Button>
-                                <Button Margin="343,0,37,0" Tag="{Binding Index}" BorderThickness="0, 1, 1, 1" Content="Edit" FontFamily="Segoe UI Semibold" Foreground="#3c3c3c" Background="{StaticResource darkyellow}"></Button>
-                                <Button Margin="390,0,0,0" Tag="{Binding Index}"  BorderThickness="0, 1, 0, 1" Content="Login" FontFamily="Segoe UI Semibold" Foreground="#3c3c3c" Background="{StaticResource darkgreen}"></Button>
+                                <Button Margin="290,0,84,0" Tag="{Binding Index}" BorderThickness="1, 0, 0, 1" Content="Export" FontFamily="Segoe UI Semibold" Foreground="#3c3c3c" Background="White"></Button>
+                                <Button Margin="343,0,37,0" Tag="{Binding Index}" BorderThickness="0, 0, 1, 1" Content="Edit" FontFamily="Segoe UI Semibold" Foreground="#3c3c3c" Background="{StaticResource darkyellow}"></Button>
+                                <Button Margin="390,0,0,0" Tag="{Binding Index}"  BorderThickness="0, 0, 0, 1" Content="Login" FontFamily="Segoe UI Semibold" Foreground="#3c3c3c" Background="{StaticResource darkgreen}"></Button>
 
                             </Grid>
                             <DataTemplate.Triggers>
@@ -51,13 +51,13 @@
         <Label HorizontalContentAlignment="Center" Grid.ColumnSpan="2" Content="Saved Accounts" HorizontalAlignment="Left" Height="37" Margin="163,0,0,0" VerticalAlignment="Top" Width="193" FontSize="20"/>
         <Button Content="Import" HorizontalAlignment="Left" Height="21" Margin="38,18,0,0" VerticalAlignment="Top" Width="48" Click="Button_Click"/>
         <Button Content="Export" HorizontalAlignment="Left" Height="21" Margin="85,18,0,0" VerticalAlignment="Top" Width="49" Click="Button_Click_1"/>
-        <CheckBox x:Name="Run_Game" Content="Run game on login" Margin="38,326,350,27"/>
-        <CheckBox x:Name="Run_Commandline"   Content="Execute command-line on login" Margin="195,326,130,27"/>
-        <ComboBox  x:Name="Games_ComboBox"   HorizontalAlignment="Left" Height="23" Margin="38,343,0,0" VerticalAlignment="Top" Width="149" IsReadOnly="True">
+        <CheckBox IsChecked="{Binding runOnLogin}" x:Name="Run_Game" Content="Run game on login" Margin="38,326,350,27"/>
+        <CheckBox IsChecked="{Binding runCommandLineArguments}" x:Name="Run_Commandline"   Content="Execute command-line on login" Margin="195,326,130,27"/>
+        <ComboBox  x:Name="Games_ComboBox" ItemsSource="{Binding games}"  HorizontalAlignment="Left" Height="23" Margin="38,343,0,0" VerticalAlignment="Top" Width="149" IsReadOnly="True">
 
         </ComboBox>
 
-        <TextBox x:Name="launchParams" Height="23" Width="200" VerticalAlignment="Top" Margin="65,343,0,0" TextChanged="launchParams_TextChanged" FontSize="14" >
+        <TextBox x:Name="launchParams" Text="{Binding commandLineArguments}" Height="23" Width="200" VerticalAlignment="Top" Margin="65,343,0,0" TextChanged="launchParams_TextChanged" FontSize="14" >
             <TextBox.Style>
                 <Style TargetType="TextBox"  xmlns:sys="clr-namespace:System;assembly=mscorlib">
                     <Style.Resources>

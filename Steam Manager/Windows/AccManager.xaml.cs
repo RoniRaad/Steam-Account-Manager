@@ -9,6 +9,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using SteamManager.Infrastructure;
 using SteamAccount;
+using SteamManager.Application.ViewModels;
+using System.Collections.ObjectModel;
 
 namespace SteamManager
 {
@@ -18,22 +20,17 @@ namespace SteamManager
 
     public partial class AccManager : Window
     {
-        public string SerializedData { get; set; }
-        private IList<SteamAccountViewModel> _steamAccounts = new List<SteamAccountViewModel>();
-        public bool debug = false;
+        private IAccountManagerController _acManagerController { get; set; }
         public string Password { private get; set; }
-        public static List<string> games = new List<string>();
-        DriveInfo steamDrive = DriveInfo.GetDrives()[0];
-        public IIOService _iOService { get; set; }
-        public IStringEncryptionService _stringEncryptionService { get; set; }
-        public IAccountManagerController _acManagerController { get; set; }
-        public AccManager(IIOService iOService, IStringEncryptionService stringEncryptionService, IAccountManagerController acManagerController)
+        public IAccountManagerViewModel _accountManagerViewModel { get; set; }
+        public AccManager(IAccountManagerController acManagerController, IAccountManagerViewModel accountManagerViewModel)
         {
-            _iOService = iOService;
-            _stringEncryptionService = stringEncryptionService;
+            _accountManagerViewModel = accountManagerViewModel;
+            _accountManagerViewModel.SteamAccountViewModels = new ObservableCollection<SteamAccountViewModel>();
+            _accountManagerViewModel.runOnLogin = true;
             _acManagerController = acManagerController;
 
-            this.DataContext = _steamAccounts;
+            this.DataContext = _accountManagerViewModel;
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
 
             InitializeComponent();
@@ -42,8 +39,7 @@ namespace SteamManager
 
         private void StartSteamLoad()
         {
-            _steamAccounts = _acManagerController.GetSteamAccountViewModels(Password);
-            this.DataContext = _steamAccounts;
+            _accountManagerViewModel.SteamAccountViewModels = _acManagerController.GetSteamAccountViewModels(Password);
         }
         public void RefreshSteam()
         {
@@ -51,27 +47,27 @@ namespace SteamManager
         }
         public void AddNewSteam(object sender, RoutedEventArgs e)
         {
-            var win2 = new AddAccount(_iOService, _stringEncryptionService);
+            var win2 = new AddAccount(_acManagerController);
             win2.SetPass(Password);
             win2.Owner = this;
             win2.Show();
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var IPass = new ImportPassword(_iOService, _stringEncryptionService);
+            /*var IPass = new ImportPassword();
             IPass.SetPass(Password);
             IPass.SetWindow(this);
             IPass.Show();
-            IPass.Owner = this;
+            IPass.Owner = this;*/
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            var Epass = new ExportPassword(_iOService, _stringEncryptionService);
+            /*var Epass = new ExportPassword();
             Epass.SetPass(Password);
             Epass.SetLibrary(true);
             Epass.Show();
-            Epass.Owner = this;
+            Epass.Owner = this; */
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -89,11 +85,11 @@ namespace SteamManager
             switch (((Button)e.OriginalSource).Content)
             {
                 case ("Export"):
-                    var Epass = new ExportPassword(_iOService, _stringEncryptionService);
+                   /* var Epass = new ExportPassword(_iOService, _stringEncryptionService);
                     Epass.SetPass(Password);
-                    // Epass.SetFile(files[i]); // i is found in e.Tag and files is a local variable that needs its scope changed
+                    Epass.SetFile(files[i]); // i is found in e.Tag and files is a local variable that needs its scope changed
                     Epass.Owner = this;
-                    Epass.Show();
+                    Epass.Show();*/
                     break;
                 case ("Edit"):
                     break;
