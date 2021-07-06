@@ -10,7 +10,7 @@ namespace SteamManager.Application.ViewModels
 {
     public class AccountManagerViewModel : IAccountManagerViewModel, INotifyPropertyChanged
     {
-        public List<string> games { get; set; }
+        public List<string> Games { get; set; }
         ObservableCollection<SteamAccountViewModel> _steamAccountViewModels;
 
         public ObservableCollection<SteamAccountViewModel> SteamAccountViewModels
@@ -25,9 +25,9 @@ namespace SteamManager.Application.ViewModels
             }
         }
 
-        public bool runOnLogin { get; set; }
-        public bool runCommandLineArguments { get; set; }
-        public string commandLineArguments { get; set; }
+        public bool RunOnLogin { get; set; }
+        public bool RunCommandLineArguments { get; set; }
+        public string CommandLineArguments { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void NotifyPropertyChanged(string propertyName)

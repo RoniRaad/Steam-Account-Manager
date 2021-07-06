@@ -27,9 +27,9 @@ namespace SteamManager
         private LoginViewModel _loginViewModel { get; set; }
         private IIOService _iOService { get; set; }
         private IStringEncryptionService _stringEncryptionService { get; set; }
-        private AccManager _accountManager { get; set; }
-        public ILoginController _loginController { get; set; }
-        public MainWindow(IIOService iOService, IStringEncryptionService stringEncryptionService, ILoginController loginController, AccManager accountManager)
+        private AccountManager _accountManager { get; set; }
+        private ILoginController _loginController { get; set; }
+        public MainWindow(IIOService iOService, IStringEncryptionService stringEncryptionService, ILoginController loginController, AccountManager accountManager)
         {
             _accountManager = accountManager;
             _iOService = iOService;

@@ -109,5 +109,10 @@ namespace SteamAccount
                 return (verified, needsUpgrade);
             }
         }
+
+        public void SaveFile(string filePath, string fileName, string fileContents)
+        {
+            
+        }
     }
 }

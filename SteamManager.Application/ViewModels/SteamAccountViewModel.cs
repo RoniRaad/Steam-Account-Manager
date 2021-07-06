@@ -12,14 +12,7 @@ namespace SteamManager
     {
         public SteamAccountModel Model { get; set; } = new SteamAccountModel();
 
-        private bool isEveryOther = false;
-
-        public bool IsEveryOther
-        {
-            set { isEveryOther = value; }
-        }
-
-        public string Name
+        public string DisplayName
         {
             get { return Model.DisplayName; }
             set { Model.DisplayName = value; }
@@ -36,11 +29,11 @@ namespace SteamManager
             get { return Model.Password; }
             set { Model.Password = value; }
         }
-        private string index;
+        private string _index;
         public string Index
         {
-            get { return index; }
-            set { index = value; }
+            get { return _index; }
+            set { _index = value; }
         }
     }
 }

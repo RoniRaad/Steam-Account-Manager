@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using SteamAccount;
 using SteamManager.Infrastructure;
+using SteamManager.Models;
 
 namespace SteamManager
 {
@@ -22,40 +23,31 @@ namespace SteamManager
     /// </summary>
     public partial class EditWindow : Window
     {
-        public static string[] data;
-        string Password;
-        public IOService _iOService { get; set; }
-        public IStringEncryptionService _stringEncryptionService { get; set; }
-        public EditWindow(string[] pass, string password, IOService iOService, IStringEncryptionService stringEncryptionService)
+        private string _password { get; set; }
+        private string _currentUsername { get; set; }
+        private IAccountManagerController _accountManagerController { get; set; }
+        private SteamAccountModel _currentSteamAccount { get; set; }
+        public EditWindow(IAccountManagerController accountManagerController, SteamAccountModel currentSteamAccount, string password)
         {
-            _iOService = iOService;
-            _stringEncryptionService = stringEncryptionService;
+            _password = password;
+            _accountManagerController = accountManagerController;
+            _currentSteamAccount = currentSteamAccount;
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+            this.DataContext = _currentSteamAccount;
             InitializeComponent();
-            data = pass;
-            EditAccount_Name.Text = data[0];
-            EditAccount_User.Text = data[1];
-            this.Password = password;
+            
         }
 
         private void EditAccount_Add(object sender, RoutedEventArgs e)
         {
-            if (!Directory.Exists("C:\\Users\\" + Environment.UserName + "\\Documents\\Steam Manager\\Accounts"))
-            {
-                Directory.CreateDirectory("C:\\Users\\" + Environment.UserName + "\\Documents\\Steam Manager\\Accounts\\");
-            }
-            File.Delete($"C:\\Users\\{Environment.UserName}\\Documents\\Steam Manager\\Accounts\\{data[0]}.txt");
-            string write = _stringEncryptionService.EncryptString(Password, EditAccount_Name.Text + ";" + EditAccount_User.Text + ";" + ((EditAccount_Pass.Password != "Password") ? EditAccount_Pass.Password : data[2]));
-            File.WriteAllText($"C:\\Users\\{Environment.UserName}\\Documents\\Steam Manager\\Accounts\\{EditAccount_Name.Text}.txt", write);
-            ((AccManager)this.Owner).RefreshSteam();
+            _accountManagerController.AddSteamAccountModel(_password,_currentSteamAccount);
+            ((AccountManager)this.Owner).RefreshSteam();
             this.Close();
         }
 
         private void EditAccount_Remove(object sender, RoutedEventArgs e)
         {
-            File.Delete($"C:\\Users\\{Environment.UserName}\\Documents\\Steam Manager\\Accounts\\{data[0]}.txt");
-            ((AccManager)this.Owner).RefreshSteam();
-            this.Close();
+            _accountManagerController.DeleteSteamAccount(_currentSteamAccount.UserName, _password);
         }
     }
 }

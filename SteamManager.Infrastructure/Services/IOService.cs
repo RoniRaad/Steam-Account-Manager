@@ -13,7 +13,7 @@ namespace SteamManager.Infrastructure
     public class IOService : IIOService
     {
         private string _dataPath { get; set; } = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\Steam Manager";
-        public IStringEncryptionService _stringEncryptionService { get; set; }
+        private IStringEncryptionService _stringEncryptionService { get; set; }
         public IOService(IStringEncryptionService stringEncryptionService)
         {
             _stringEncryptionService = stringEncryptionService;
@@ -70,6 +70,21 @@ namespace SteamManager.Infrastructure
             }
         }
 
-
+        public DriveInfo FindSteamDrive()
+        {
+            DriveInfo steamDrive = null;
+            foreach (DriveInfo drive in DriveInfo.GetDrives())
+            {
+                if (Directory.Exists($"{drive.RootDirectory}\\Program Files (x86)\\Steam"))
+                {
+                    steamDrive = drive;
+                }
+            }
+            return steamDrive;
+        }
+        public void WriteFile(string filePath, string fileContents)
+        {
+            File.WriteAllText(filePath, fileContents);
+        }
     }
 }

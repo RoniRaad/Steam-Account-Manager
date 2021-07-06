@@ -4,6 +4,7 @@ using SteamAccount;
 using SteamManager.Application.Controllers;
 using SteamManager.Application.ViewModels;
 using SteamManager.Infrastructure;
+using SteamManager.Infrastructure.Services;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -39,8 +40,9 @@ namespace SteamManager
             services.AddTransient<IAccountManagerController, AccountManagerController>();
             services.AddTransient<ILoginController, LoginController>();
             services.AddTransient<IAccountManagerViewModel, AccountManagerViewModel>();
+            services.AddTransient<ISteamService, SteamService>();
             services.AddSingleton<MainWindow>();
-            services.AddSingleton<AccManager>();
+            services.AddSingleton<AccountManager>();
         }
 
         protected override async void OnStartup(StartupEventArgs e) 

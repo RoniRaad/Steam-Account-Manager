@@ -1,4 +1,6 @@
-﻿namespace SteamManager.Infrastructure
+﻿using System.IO;
+
+namespace SteamManager.Infrastructure
 {
     public interface IIOService
     {
@@ -7,5 +9,8 @@
         void UpdateData(string data, string password);
         bool ValidateData();
         string GetEncryptedUsername();
+
+        public DriveInfo FindSteamDrive();
+        void WriteFile(string file, string v);
     }
 }

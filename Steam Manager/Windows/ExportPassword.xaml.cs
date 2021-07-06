@@ -21,89 +21,25 @@ using SteamManager.Infrastructure;
 
 namespace SteamManager
 {
-    /// <summary>
-    /// Interaction logic for Window2.xaml
-    /// </summary>
     public partial class ExportPassword : Window
     {
-        public IIOService _iOService { get; set; }
-        public IStringEncryptionService _stringEncryptionService { get; set; }
-        public ExportPassword(IIOService iOService, IStringEncryptionService stringEncryptionService)
+        private string[] _selectedUserNames { get; set; }
+        public IAccountManagerController _accountManagerController { get; set; }
+        public string Password { get; set; }
+        public ExportPassword(IAccountManagerController accountManagerController, string[] SelectedUserNames)
         {
-            _iOService = iOService;
-            _stringEncryptionService = stringEncryptionService;
+            _accountManagerController = accountManagerController;
+            _selectedUserNames = SelectedUserNames;
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             InitializeComponent();
         }
 
-
-        string Password;
-        public void SetPass(string p)
-        {
-            Password = p;
-
-
-        }
-        string file;
-        public void SetFile(string f)
-        {
-            file = f;
-
-
-        }
-        bool Library = false;
-        public void SetLibrary(bool b)
-        {
-            Library = b;
-        }
         private void SetEPass(object sender, RoutedEventArgs e)
         {
-            if (EPass.Password.Length < 8)
-            {
-                passError.Content = "Password must be atleast 8 characters";
-            }
-            else
-            {
-                if (Library)
-                {
-                    string[] files = Directory.GetFiles($"C:\\Users\\{Environment.UserName}\\Documents\\Steam Manager\\Accounts\\");
-                    char[] delimiters = { ';' };
-                    string content = "";
-                    int count = 0;
-                    foreach (string f in files)
-                    {
-                        if (count == 0)
-                        {
-                            content = _stringEncryptionService.EncryptString(EPass.Password, "decrypted" + _stringEncryptionService.DecryptString(Password, File.ReadAllText(f)));
-                            count = 1;
-                        }
-                        else
-                        {
-                            content = content + ";" + _stringEncryptionService.EncryptString(EPass.Password, _stringEncryptionService.DecryptString(Password, File.ReadAllText(f)));
-                        }
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            if (saveFileDialog.ShowDialog() == true)
+                _accountManagerController.ExportSteamAccounts(saveFileDialog.FileName, _selectedUserNames, Password, false);
 
-                    }
-                    var fileDialog = new OpenFileDialog();
-                    if (fileDialog.ShowDialog() == true)
-                    {
-                        
-                        File.WriteAllText(fileDialog.FileName + "\\SteamManagerData.enc", content);
-                        this.Close();
-
-                    }
-                }
-                else
-                {
-                    var fileDialog = new OpenFileDialog();
-                    if (fileDialog.ShowDialog() == true)
-                    {
-
-                        File.WriteAllText(fileDialog.FileName + "\\" + System.IO.Path.GetFileName(file).Replace(".txt", ".data").Replace("/", "").Replace("\\", ""), _stringEncryptionService.EncryptString(EPass.Password, "decrypted" + _stringEncryptionService.DecryptString(Password, File.ReadAllText(file))));
-                        this.Close();
-
-                    }
-                }
-            }
         }
     }
 }

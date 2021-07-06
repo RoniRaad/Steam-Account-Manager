@@ -5,10 +5,10 @@ namespace SteamManager.Application.ViewModels
 {
     public interface IAccountManagerViewModel
     {
-        string commandLineArguments { get; set; }
-        List<string> games { get; set; }
-        bool runCommandLineArguments { get; set; }
-        bool runOnLogin { get; set; }
+        string CommandLineArguments { get; set; }
+        List<string> Games { get; set; }
+        bool RunCommandLineArguments { get; set; }
+        bool RunOnLogin { get; set; }
         ObservableCollection<SteamAccountViewModel> SteamAccountViewModels { get; set; }
     }
 }

@@ -16,6 +16,7 @@ using SteamAccount;
 using SteamManager.Infrastructure;
 using System.Text.Json;
 using System.Collections.ObjectModel;
+using SteamManager.Models;
 
 namespace SteamManager
 {
@@ -24,11 +25,13 @@ namespace SteamManager
     /// </summary>
     public partial class AddAccount : Window
     {
-        public SteamAccountViewModel _newAccount { get; set; }
-        public IAccountManagerController _accountManagerController { get; set; }
-        public AddAccount(IAccountManagerController accountManagerController)
+        private SteamAccountModel _newAccount { get; set; }
+        private IAccountManagerController _accountManagerController { get; set; }
+        private string _password { get; set; }
+        public AddAccount(IAccountManagerController accountManagerController, string password)
         {
-            _newAccount = new SteamAccountViewModel();
+            _password = password;
+            _newAccount = new SteamAccountModel();
             _accountManagerController = accountManagerController;
 
             this.DataContext = _newAccount;
@@ -37,17 +40,11 @@ namespace SteamManager
         }
 
 
-        string Password;
-        public void SetPass(string p)
-        {
-            Password = p;
-        }
         public void NewAccount_Add(object sender, RoutedEventArgs e)
         {
-            _newAccount.IsEveryOther = false;
             _newAccount.Password = NewAccount_Pass.Password;
-            _accountManagerController.AddSteamAccountViewModel(Password, _newAccount);
-            ((AccManager)this.Owner).RefreshSteam();
+            _accountManagerController.AddSteamAccountModel(_password, _newAccount);
+            ((AccountManager)this.Owner).RefreshSteam();
             this.Close();
         }
     }

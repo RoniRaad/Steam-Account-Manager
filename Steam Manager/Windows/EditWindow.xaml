@@ -14,12 +14,12 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Label Content="Edit Steam Account" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="40" Margin="58,18,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="219" FontSize="20"/>
-        <TextBox x:Name="EditAccount_User" HorizontalAlignment="Left" Height="21" Margin="68,150,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="195" FontSize="13"/>
+        <TextBox x:Name="EditAccount_User" IsReadOnly="True" HorizontalAlignment="Left" Text="{Binding UserName}" Height="21" Margin="68,150,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="195" FontSize="13"/>
         <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Username" HorizontalAlignment="Left" Margin="68,120,0,0" VerticalAlignment="Top" Width="195" FontSize="18" Height="30"/>
         <PasswordBox x:Name="EditAccount_Pass" Password="Password" HorizontalAlignment="Left" Height="22" Margin="68,203,0,0"  VerticalAlignment="Top" Width="195" FontSize="13"/>
         <Label Content="Password" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="68,171,0,0" VerticalAlignment="Top" Width="195" FontSize="18" Height="32"/>
         <Button Content="Save" HorizontalAlignment="Left" Height="23" Margin="217,260,0,0" VerticalAlignment="Top" Width="60" FontSize="14" Background="#FF24BF02" Click="EditAccount_Add" Foreground="#FF1B1B1B"/>
-        <TextBox x:Name="EditAccount_Name" HorizontalAlignment="Left" Height="23" Margin="68,98,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="195" FontSize="13"/>
+        <TextBox x:Name="EditAccount_Name" HorizontalAlignment="Left" Text="{Binding DisplayName}" Height="23" Margin="68,98,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="195" FontSize="13"/>
         <Label Content="Name" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="68,68,0,0" VerticalAlignment="Top" Width="195" FontSize="18" Height="30"/>
         <Button Content="Remove" HorizontalAlignment="Left" Height="23" Margin="58,260,0,0" VerticalAlignment="Top" Width="60" FontSize="14" Background="#FFF01C1C" Click="EditAccount_Remove" Foreground="#FF1B1B1B"/>
 
