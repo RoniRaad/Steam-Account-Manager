@@ -7,7 +7,8 @@
         xmlns:vm="clr-namespace:SteamManager;assembly=SteamManager.Application"
         mc:Ignorable="d"
         ResizeMode="CanMinimize"
-        Title="Steam Manager" Height="416" Width="543">
+        Title="Steam Manager" Height="416" Width="543"
+        Activated="RefreshSteam">
     <Window.Resources>
         <SolidColorBrush x:Key = "lightyellow" Color = "#fdff96" />
         <SolidColorBrush x:Key = "darkyellow" Color = "#eef913" />
@@ -49,8 +50,8 @@
         </Border>
         <Button Foreground="#FF2E2E2E" Content="Add" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="23" Margin="424,343,0,0" VerticalAlignment="Top" Width="52" Background="#FF1EAC10" Click="AddNewSteam" FontFamily="MS Reference Sans Serif"/>
         <Label HorizontalContentAlignment="Center" Grid.ColumnSpan="2" Content="Saved Accounts" HorizontalAlignment="Left" Height="37" Margin="163,0,0,0" VerticalAlignment="Top" Width="193" FontSize="20"/>
-        <Button Content="Import" HorizontalAlignment="Left" Height="21" Margin="38,18,0,0" VerticalAlignment="Top" Width="48"/>
-        <Button Content="Export" HorizontalAlignment="Left" Height="21" Margin="85,18,0,0" VerticalAlignment="Top" Width="49"/>
+        <Button Content="Import" HorizontalAlignment="Left" Height="21" Margin="38,18,0,0" VerticalAlignment="Top" Width="48" Click="Import_Click"/>
+        <Button Content="Export" HorizontalAlignment="Left" Height="21" Margin="85,18,0,0" VerticalAlignment="Top" Width="49" Click="Export_Click"/>
         <CheckBox IsChecked="{Binding RunOnLogin}" x:Name="Run_Game" Content="Run game on login" Margin="38,326,350,27"/>
         <CheckBox IsChecked="{Binding RunCommandLineArguments}" x:Name="Run_Commandline"   Content="Execute command-line on login" Margin="195,326,130,27"/>
         <ComboBox  x:Name="Games_ComboBox" ItemsSource="{Binding Games}"  HorizontalAlignment="Left" Height="23" Margin="38,343,0,0" VerticalAlignment="Top" Width="149" IsReadOnly="True">

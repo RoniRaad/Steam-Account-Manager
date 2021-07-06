@@ -12,5 +12,6 @@ namespace SteamManager.Infrastructure
 
         public DriveInfo FindSteamDrive();
         void WriteFile(string file, string v);
+        string ReadFile(string file);
     }
 }

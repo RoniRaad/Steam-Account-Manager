@@ -56,15 +56,19 @@ namespace SteamManager
             _loginViewModel.Password = Password_Box.Password;
 
             string hashedPassword = _loginController.HandleLogin(_loginViewModel);
-
             if (hashedPassword.Length != 0)
             {
                 _accountManager.Password = hashedPassword;
-                _accountManager.RefreshSteam();
                 _accountManager.Show();
                 this.Close();
             }
 
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            _accountManager.Close();
         }
     }
 }

@@ -21,20 +21,25 @@ using SteamManager.Infrastructure;
 
 namespace SteamManager
 {
-    /// <summary>
-    /// Interaction logic for Window2.xaml
-    /// </summary>
     public partial class ImportPassword : Window
     {
-        public ImportPassword(IIOService iOService, IStringEncryptionService stringEncryptionService)
+        public IAccountManagerController _accountManagerController { get; set; }
+        public string Password { get; set; }
+        public ImportPassword(IAccountManagerController accountManagerController, string password)
         {
+            Password = password;
+            _accountManagerController = accountManagerController;
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             InitializeComponent();
         }
 
         private void SetIPass(object sender, RoutedEventArgs e)
         {
-            
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Dat files (*.dat)|*.dat|All files (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == true)
+                _accountManagerController.ImportSteamAccounts(openFileDialog.FileName, Password, IPass.Password);
+            this.Close();
         }
     }
 }

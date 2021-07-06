@@ -86,5 +86,10 @@ namespace SteamManager.Infrastructure
         {
             File.WriteAllText(filePath, fileContents);
         }
+
+        public string ReadFile(string filePath)
+        {
+            return File.ReadAllText(filePath);
+        }
     }
 }

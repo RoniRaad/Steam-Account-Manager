@@ -32,9 +32,15 @@ namespace SteamManager.Application.Controllers
          */
         public string HandleLogin(LoginViewModel loginViewModel)
         {
-            string Password = _stringEncryptionService.Hash(loginViewModel.Password);
-
-            string decryptData = _iOService.ReadData(Password);
+            string Password = _stringEncryptionService.Hash( loginViewModel.Username + loginViewModel.Password);
+            string decryptData;
+            try { 
+                decryptData = _iOService.ReadData(Password);
+            }
+            catch
+            {
+                decryptData = ""; // If we are unable to decode the data file then we are being given the wrong username/password
+            }
 
             if (decryptData.Length == 0)
             {

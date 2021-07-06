@@ -44,7 +44,6 @@ namespace SteamManager
         {
             _newAccount.Password = NewAccount_Pass.Password;
             _accountManagerController.AddSteamAccountModel(_password, _newAccount);
-            ((AccountManager)this.Owner).RefreshSteam();
             this.Close();
         }
     }

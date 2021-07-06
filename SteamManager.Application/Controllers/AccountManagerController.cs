@@ -1,4 +1,5 @@
-﻿using SteamManager.Application.Models;
+﻿using SteamAccount;
+using SteamManager.Application.Models;
 using SteamManager.Infrastructure;
 using SteamManager.Infrastructure.Services;
 using SteamManager.Models;
@@ -15,17 +16,21 @@ namespace SteamManager
     public class AccountManagerController : IAccountManagerController
     {
         private IIOService _iOService { get; set; }
+        private IStringEncryptionService _stringEncryptionService;
         private ISteamService _steamService { get; set; }
 
-        public AccountManagerController(IIOService iOService, ISteamService steamService)
+        public AccountManagerController(IIOService iOService, IStringEncryptionService stringEncryptionService, ISteamService steamService)
         {
+            _stringEncryptionService = stringEncryptionService;
             _iOService = iOService;
             _steamService = steamService;
         }
         public ObservableCollection<SteamAccountModel> GetSteamAccountModels(string Password)
         {
             string decryptedData = _iOService.ReadData(Password);
+
             ObservableCollection<SteamAccountModel> steamAccountModels = JsonSerializer.Deserialize<ObservableCollection<SteamAccountModel>>(decryptedData);
+
             return steamAccountModels;
         }
         public ObservableCollection<SteamAccountViewModel> GetSteamAccountViewModels(string Password)
@@ -50,6 +55,7 @@ namespace SteamManager
         {
             bool alreadyExists = false;
             ObservableCollection<SteamAccountModel> accounts = GetSteamAccountModels(password);
+
             foreach (SteamAccountModel steamModel in accounts)
             {
                 if (steamModel.UserName == newAccount.UserName)
@@ -61,9 +67,11 @@ namespace SteamManager
                     alreadyExists = true;
                 }
             }
+
             if (!alreadyExists) {
                 accounts.Add(newAccount);
             }
+
             _iOService.UpdateData(JsonSerializer.Serialize(accounts), password);
         }
 
@@ -72,26 +80,46 @@ namespace SteamManager
             _steamService.Login(steamAccount.UserName, steamAccount.Password, "");
         }
 
-        public void DeleteSteamAccount(string username, string password)
+        public void DeleteSteamAccount(string userName, string password)
         {
+            ObservableCollection<SteamAccountModel> updatedModels = new ObservableCollection<SteamAccountModel>();
 
+            foreach (SteamAccountModel steamAccount in GetSteamAccountModels(password))
+                if (steamAccount.UserName != userName)
+                    updatedModels.Add(steamAccount);
+
+            _iOService.UpdateData(JsonSerializer.Serialize(updatedModels), password);
         }
         
-        public void ExportSteamAccounts(string file, string[] userNames, string password, bool replace)
+        public void ExportSteamAccounts(string file, string[] userNames, string password, string exportPassword, bool replace)
         {
             ExportAccountModel exportAccountModel = new ExportAccountModel();
             ObservableCollection<SteamAccountModel> exportAccounts = new ObservableCollection<SteamAccountModel>();
             ObservableCollection<SteamAccountModel> accounts = GetSteamAccountModels(password);
+
             foreach (SteamAccountModel steamModel in accounts)
-            {
                 if (userNames.Contains(steamModel.UserName))
-                {
                     exportAccounts.Add(steamModel);
-                }
-            }
+
             exportAccountModel.accountModels = exportAccounts;
             exportAccountModel.ReplaceCurrentModels = replace;
-            _iOService.WriteFile(file, JsonSerializer.Serialize(exportAccountModel));
+
+            string hashedExportPassword = _stringEncryptionService.Hash(exportPassword);
+            string encryptedFileContents = _stringEncryptionService.EncryptString(hashedExportPassword, JsonSerializer.Serialize(exportAccountModel));
+
+            _iOService.WriteFile(file, encryptedFileContents);
+        }
+
+        public void ImportSteamAccounts(string file, string password, string importPassword)
+        {
+            string fileContents = _iOService.ReadFile(file);
+            string decryptedContents = _stringEncryptionService.DecryptString(_stringEncryptionService.Hash(importPassword), fileContents);
+
+            ExportAccountModel importedAccounts = JsonSerializer.Deserialize<ExportAccountModel>(decryptedContents);
+
+            foreach (SteamAccountModel steamAccount in importedAccounts.accountModels)
+                AddSteamAccountModel(password, steamAccount);
+
         }
     }
 }

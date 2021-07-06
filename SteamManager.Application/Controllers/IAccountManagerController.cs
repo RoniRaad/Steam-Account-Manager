@@ -11,6 +11,7 @@ namespace SteamManager
         public void AddSteamAccountModel(string password, SteamAccountModel newAccount);
         public void LoginToSteamAccount(SteamAccountViewModel steamAccount);
         void DeleteSteamAccount(string userName, string password);
-        void ExportSteamAccounts(string fileName, string[] selectedUserNames, string password, bool v);
+        public void ExportSteamAccounts(string file, string[] userNames, string password, string exportPassword, bool replace);
+        void ImportSteamAccounts(string fileName, string password1, string password2);
     }
 }

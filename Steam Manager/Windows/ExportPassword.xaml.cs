@@ -26,8 +26,9 @@ namespace SteamManager
         private string[] _selectedUserNames { get; set; }
         public IAccountManagerController _accountManagerController { get; set; }
         public string Password { get; set; }
-        public ExportPassword(IAccountManagerController accountManagerController, string[] SelectedUserNames)
+        public ExportPassword(IAccountManagerController accountManagerController, string[] SelectedUserNames, string password)
         {
+            Password = password;
             _accountManagerController = accountManagerController;
             _selectedUserNames = SelectedUserNames;
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
@@ -37,9 +38,10 @@ namespace SteamManager
         private void SetEPass(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Dat files (*.dat)|*.dat|All files (*.*)|*.*";
             if (saveFileDialog.ShowDialog() == true)
-                _accountManagerController.ExportSteamAccounts(saveFileDialog.FileName, _selectedUserNames, Password, false);
-
+                _accountManagerController.ExportSteamAccounts(saveFileDialog.FileName, _selectedUserNames, Password, EPass.Password, false);
+            this.Close();
         }
     }
 }

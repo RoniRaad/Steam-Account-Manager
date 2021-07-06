@@ -41,13 +41,13 @@ namespace SteamManager
         private void EditAccount_Add(object sender, RoutedEventArgs e)
         {
             _accountManagerController.AddSteamAccountModel(_password,_currentSteamAccount);
-            ((AccountManager)this.Owner).RefreshSteam();
             this.Close();
         }
 
         private void EditAccount_Remove(object sender, RoutedEventArgs e)
         {
             _accountManagerController.DeleteSteamAccount(_currentSteamAccount.UserName, _password);
+            this.Close();
         }
     }
 }
