@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SteamAccount;
-using SteamManager.Application.Controllers;
 using SteamManager.Application.ViewModels;
 using SteamManager.Infrastructure;
 using SteamManager.Infrastructure.Services;
@@ -37,8 +36,7 @@ namespace SteamManager
         {
             services.AddTransient<IIOService, IOService>();
             services.AddTransient<IStringEncryptionService, StringEncryptionService>();
-            services.AddTransient<IAccountManagerController, AccountManagerController>();
-            services.AddTransient<ILoginController, LoginController>();
+            services.AddTransient<ILoginViewModel, LoginViewModel>();
             services.AddTransient<IAccountManagerViewModel, AccountManagerViewModel>();
             services.AddTransient<ISteamService, SteamService>();
             services.AddSingleton<MainWindow>();

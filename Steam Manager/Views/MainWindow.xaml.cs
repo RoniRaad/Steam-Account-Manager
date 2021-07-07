@@ -15,7 +15,6 @@ using SteamManager;
 using SteamAccount;
 using SteamManager.Infrastructure;
 using System.Text.Json;
-using SteamManager.Application.Controllers;
 
 namespace SteamManager
 {
@@ -25,17 +24,11 @@ namespace SteamManager
     public partial class MainWindow : Window
     {
         private ILoginViewModel _loginViewModel { get; set; }
-        private IIOService _iOService { get; set; }
-        private IStringEncryptionService _stringEncryptionService { get; set; }
         private AccountManager _accountManager { get; set; }
-        private ILoginController _loginController { get; set; }
-        public MainWindow(IIOService iOService, IStringEncryptionService stringEncryptionService, ILoginController loginController, AccountManager accountManager)
+        public MainWindow(ILoginViewModel loginViewModel, AccountManager accountManager)
         {
             _accountManager = accountManager;
-            _iOService = iOService;
-            _stringEncryptionService = stringEncryptionService;
-            _loginController = loginController;
-            _loginViewModel = _loginController.GetViewModel();
+            _loginViewModel = loginViewModel;
             this.DataContext = _loginViewModel;
 
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
@@ -43,19 +36,11 @@ namespace SteamManager
 
 
         }
-        private void txtPassword_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                Login_Click(null, null);
-            }
-
-        }
         private void Login_Click(object sender, RoutedEventArgs e)
         {
             _loginViewModel.Password = Password_Box.Password;
 
-            string hashedPassword = _loginController.HandleLogin(_loginViewModel);
+            string hashedPassword = _loginViewModel.HandleLogin();
             if (hashedPassword.Length != 0)
             {
                 _accountManager.Password = hashedPassword;
@@ -65,5 +50,11 @@ namespace SteamManager
 
         }
 
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            if (!_accountManager.IsActive)
+                _accountManager.Close();
+        }
     }
 }

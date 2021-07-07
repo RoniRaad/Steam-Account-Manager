@@ -8,5 +8,6 @@ namespace SteamManager
         string Password { get; set; }
         string Title { get; set; }
         string Username { get; set; }
+        public string HandleLogin();
     }
 }

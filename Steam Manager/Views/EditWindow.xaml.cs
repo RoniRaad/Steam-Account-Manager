@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using SteamAccount;
 using SteamManager.Infrastructure;
 using SteamManager.Models;
+using SteamManager.Application.ViewModels;
 
 namespace SteamManager
 {
@@ -25,9 +26,9 @@ namespace SteamManager
     {
         private string _password { get; set; }
         private string _currentUsername { get; set; }
-        private IAccountManagerController _accountManagerController { get; set; }
+        private IAccountManagerViewModel _accountManagerController { get; set; }
         private ISteamAccountModel _currentSteamAccount { get; set; }
-        public EditWindow(IAccountManagerController accountManagerController, ISteamAccountModel currentSteamAccount, string password)
+        public EditWindow(IAccountManagerViewModel accountManagerController, ISteamAccountModel currentSteamAccount, string password)
         {
             _password = password;
             _accountManagerController = accountManagerController;

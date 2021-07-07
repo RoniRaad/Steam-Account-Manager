@@ -16,14 +16,11 @@ namespace SteamManager
 {
     public partial class AccountManager : Window
     {
-        private IAccountManagerController _acccountManagerController { get; set; }
         public string Password { get; set; }
         private IAccountManagerViewModel _accountManagerViewModel { get; set; }
-        public AccountManager(IAccountManagerController acccountManagerController, IAccountManagerViewModel accountManagerViewModel)
+        public AccountManager(IAccountManagerViewModel accountManagerViewModel)
         {
             _accountManagerViewModel = accountManagerViewModel;
-            _acccountManagerController = acccountManagerController;
-
             this.DataContext = _accountManagerViewModel;
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
 
@@ -32,7 +29,7 @@ namespace SteamManager
 
         private void StartSteamLoad()
         {
-            _accountManagerViewModel.SteamAccountViewModels = _acccountManagerController.GetSteamAccountViewModels(Password);
+            _accountManagerViewModel.SteamAccountViewModels = _accountManagerViewModel.GetSteamAccountViewModels(Password);
         }
         public void RefreshSteam(object sender, EventArgs e)
         {
@@ -41,7 +38,7 @@ namespace SteamManager
         }
         public void AddNewSteam(object sender, RoutedEventArgs e)
         {
-            var addAccountPrompt = new AddAccount(_acccountManagerController, Password);
+            var addAccountPrompt = new AddAccount(_accountManagerViewModel, Password);
             addAccountPrompt.Owner = this;
             addAccountPrompt.Show();
             addAccountPrompt.Closed += RefreshSteam;
@@ -52,25 +49,25 @@ namespace SteamManager
             switch (clickedButton.Content)
             {
                 case ("Export"):
-                    Window exportWindow = new ExportPassword(_acccountManagerController, new string[] { ((ISteamAccountViewModel)clickedButton.DataContext).UserName }, Password);
+                    Window exportWindow = new ExportPassword(_accountManagerViewModel, new string[] { ((ISteamAccountViewModel)clickedButton.DataContext).UserName }, Password);
                     exportWindow.Owner = this;
                     exportWindow.Show();
                     break;
                 case ("Edit"):
-                    Window editWindow = (new EditWindow(_acccountManagerController, ((ISteamAccountViewModel)clickedButton.DataContext).Model, Password));
+                    Window editWindow = (new EditWindow(_accountManagerViewModel, ((ISteamAccountViewModel)clickedButton.DataContext).Model, Password));
                     editWindow.Owner = this;
                     editWindow.Show();
                     editWindow.Closed += RefreshSteam;
                     break;
                 case ("Login"):
-                    _acccountManagerController.LoginToSteamAccount((ISteamAccountViewModel)clickedButton.DataContext);
+                    _accountManagerViewModel.LoginToSteamAccount((ISteamAccountViewModel)clickedButton.DataContext);
                     break;
             }
         }
 
         private void Import_Click(object sender, RoutedEventArgs e)
         {
-            Window importWindow = new ImportPassword(_acccountManagerController, Password);
+            Window importWindow = new ImportPassword(_accountManagerViewModel, Password);
             importWindow.Show();
             importWindow.Owner = this;
             importWindow.Closed += RefreshSteam;
@@ -86,7 +83,7 @@ namespace SteamManager
                 steamUserNames[count] = steamAccountView.UserName;
                 count++;
             }
-            Window exportWindow = new ExportPassword(_acccountManagerController, steamUserNames, Password);
+            Window exportWindow = new ExportPassword(_accountManagerViewModel, steamUserNames, Password);
             exportWindow.Show();
             exportWindow.Owner = this;
             exportWindow.Closed += RefreshSteam;

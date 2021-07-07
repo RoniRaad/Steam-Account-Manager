@@ -18,16 +18,17 @@ using Microsoft;
 using Microsoft.Win32;
 using SteamAccount;
 using SteamManager.Infrastructure;
+using SteamManager.Application.ViewModels;
 
 namespace SteamManager
 {
     public partial class ImportPassword : Window
     {
-        public IAccountManagerController _accountManagerController { get; set; }
-        public string Password { get; set; }
-        public ImportPassword(IAccountManagerController accountManagerController, string password)
+        private IAccountManagerViewModel _accountManagerController { get; set; }
+        private string _password { get; set; }
+        public ImportPassword(IAccountManagerViewModel accountManagerController, string password)
         {
-            Password = password;
+            _password = password;
             _accountManagerController = accountManagerController;
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             InitializeComponent();
@@ -38,7 +39,7 @@ namespace SteamManager
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Dat files (*.dat)|*.dat|All files (*.*)|*.*";
             if (openFileDialog.ShowDialog() == true)
-                _accountManagerController.ImportSteamAccounts(openFileDialog.FileName, Password, IPass.Password);
+                _accountManagerController.ImportSteamAccounts(openFileDialog.FileName, _password, IPass.Password);
             this.Close();
         }
     }

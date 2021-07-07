@@ -18,17 +18,18 @@ using Microsoft;
 using Microsoft.Win32;
 using SteamAccount;
 using SteamManager.Infrastructure;
+using SteamManager.Application.ViewModels;
 
 namespace SteamManager
 {
     public partial class ExportPassword : Window
     {
         private string[] _selectedUserNames { get; set; }
-        public IAccountManagerController _accountManagerController { get; set; }
-        public string Password { get; set; }
-        public ExportPassword(IAccountManagerController accountManagerController, string[] SelectedUserNames, string password)
+        private IAccountManagerViewModel _accountManagerController { get; set; }
+        private string _password { get; set; }
+        public ExportPassword(IAccountManagerViewModel accountManagerController, string[] SelectedUserNames, string password)
         {
-            Password = password;
+            _password = password;
             _accountManagerController = accountManagerController;
             _selectedUserNames = SelectedUserNames;
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
@@ -40,7 +41,7 @@ namespace SteamManager
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "Dat files (*.dat)|*.dat|All files (*.*)|*.*";
             if (saveFileDialog.ShowDialog() == true)
-                _accountManagerController.ExportSteamAccounts(saveFileDialog.FileName, _selectedUserNames, Password, EPass.Password, false);
+                _accountManagerController.ExportSteamAccounts(saveFileDialog.FileName, _selectedUserNames, _password, EPass.Password);
             this.Close();
         }
     }

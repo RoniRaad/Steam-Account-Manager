@@ -17,6 +17,7 @@ using SteamManager.Infrastructure;
 using System.Text.Json;
 using System.Collections.ObjectModel;
 using SteamManager.Models;
+using SteamManager.Application.ViewModels;
 
 namespace SteamManager
 {
@@ -26,9 +27,9 @@ namespace SteamManager
     public partial class AddAccount : Window
     {
         private ISteamAccountModel _newAccount { get; set; }
-        private IAccountManagerController _accountManagerController { get; set; }
+        private IAccountManagerViewModel _accountManagerController { get; set; }
         private string _password { get; set; }
-        public AddAccount(IAccountManagerController accountManagerController, string password)
+        public AddAccount(IAccountManagerViewModel accountManagerController, string password)
         {
             _password = password;
             _newAccount = new SteamAccountModel();
