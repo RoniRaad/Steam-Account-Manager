@@ -28,10 +28,14 @@ namespace SteamManager.Infrastructure.Services
             Process.Start($"{_iOService.FindSteamDrive()}\\Program Files (x86)\\Steam\\steam.exe", args);
         }
 
-        public void Login(string userName, string password, string args)
+        public async Task LoginAsync(string userName, string password, string args)
         {
-            StopSteam();
-            StartSteam($"{args} -login {userName} {password}");
+            await Task.Run(() =>
+            {
+                StopSteam();
+                StartSteam($"{args} -login {userName} {password}");
+            });
+
         }
     }
 }

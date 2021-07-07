@@ -7,14 +7,15 @@ using System.Threading.Tasks;
 
 namespace SteamManager
 {
-    public class LoginViewModel : INotifyPropertyChanged
+    public class LoginViewModel : ILoginViewModel
     {
         private string _errorMessage = "";
         public string Title { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-        public string ErrorMessage { 
-            get { return _errorMessage; } 
+        public string ErrorMessage
+        {
+            get { return _errorMessage; }
             set
             {
                 if (_errorMessage == value)

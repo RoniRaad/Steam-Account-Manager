@@ -25,7 +25,7 @@ namespace SteamManager
     /// </summary>
     public partial class AddAccount : Window
     {
-        private SteamAccountModel _newAccount { get; set; }
+        private ISteamAccountModel _newAccount { get; set; }
         private IAccountManagerController _accountManagerController { get; set; }
         private string _password { get; set; }
         public AddAccount(IAccountManagerController accountManagerController, string password)

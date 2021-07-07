@@ -21,16 +21,16 @@ namespace SteamManager.Application.Controllers
             _isRegistered = _iOService.ValidateData();
         }
 
-        public LoginViewModel GetViewModel()
+        public ILoginViewModel GetViewModel()
         {
-            LoginViewModel loginViewModel = new LoginViewModel();
+            ILoginViewModel loginViewModel = new LoginViewModel();
             loginViewModel.Title = (_isRegistered) ? "Login" : "Register";
             return loginViewModel;
         }
         /**
          * Returns the hashed password
          */
-        public string HandleLogin(LoginViewModel loginViewModel)
+        public string HandleLogin(ILoginViewModel loginViewModel)
         {
             string Password = _stringEncryptionService.Hash( loginViewModel.Username + loginViewModel.Password);
             string decryptData;
