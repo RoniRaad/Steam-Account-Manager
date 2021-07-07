@@ -29,7 +29,7 @@ namespace SteamManager
         {
             string decryptedData = _iOService.ReadData(Password);
 
-            ICollection<ISteamAccountModel> steamAccountModels = JsonSerializer.Deserialize<ObservableCollection<SteamAccountModel>>(decryptedData);
+            ICollection<ISteamAccountModel> steamAccountModels = JsonSerializer.Deserialize<ObservableCollection<SteamAccountModel>>(decryptedData).ToList<ISteamAccountModel>();
 
             return steamAccountModels;
         }
@@ -94,7 +94,7 @@ namespace SteamManager
         public void ExportSteamAccounts(string file, string[] userNames, string password, string exportPassword, bool replace)
         {
             ExportAccountModel exportAccountModel = new ExportAccountModel();
-            ObservableCollection<SteamAccountModel> exportAccounts = new ObservableCollection<SteamAccountModel>();
+            ICollection<ISteamAccountModel> exportAccounts = new ObservableCollection<ISteamAccountModel>();
             ICollection<ISteamAccountModel> accounts = GetSteamAccountModels(password);
 
             foreach (SteamAccountModel steamModel in accounts)
