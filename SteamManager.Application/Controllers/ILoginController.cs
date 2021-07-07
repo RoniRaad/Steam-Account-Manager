@@ -4,7 +4,7 @@ namespace SteamManager.Application.Controllers
 {
     public interface ILoginController
     {
-        public string HandleLogin(LoginViewModel loginViewModel);
-        LoginViewModel GetViewModel();
+        public string HandleLogin(ILoginViewModel loginViewModel);
+        ILoginViewModel GetViewModel();
     }
 }

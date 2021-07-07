@@ -1,8 +1,10 @@
-﻿namespace SteamManager.Infrastructure.Services
+﻿using System.Threading.Tasks;
+
+namespace SteamManager.Infrastructure.Services
 {
     public interface ISteamService
     {
-        void Login(string userName, string password, string args);
+        Task LoginAsync(string userName, string password, string args);
         void StartSteam(string args);
         void StopSteam();
     }

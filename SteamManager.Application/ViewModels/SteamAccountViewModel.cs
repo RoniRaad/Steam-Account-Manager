@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace SteamManager
 {
-    public class SteamAccountViewModel
+    public class SteamAccountViewModel : ISteamAccountViewModel
     {
-        public SteamAccountModel Model { get; set; } = new SteamAccountModel();
+        public ISteamAccountModel Model { get; set; } = new SteamAccountModel();
 
         public string DisplayName
         {

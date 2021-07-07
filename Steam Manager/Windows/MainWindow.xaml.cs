@@ -24,7 +24,7 @@ namespace SteamManager
     /// </summary>
     public partial class MainWindow : Window
     {
-        private LoginViewModel _loginViewModel { get; set; }
+        private ILoginViewModel _loginViewModel { get; set; }
         private IIOService _iOService { get; set; }
         private IStringEncryptionService _stringEncryptionService { get; set; }
         private AccountManager _accountManager { get; set; }
@@ -65,10 +65,5 @@ namespace SteamManager
 
         }
 
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-            _accountManager.Close();
-        }
     }
 }

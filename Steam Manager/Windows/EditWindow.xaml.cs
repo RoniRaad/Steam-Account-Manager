@@ -26,8 +26,8 @@ namespace SteamManager
         private string _password { get; set; }
         private string _currentUsername { get; set; }
         private IAccountManagerController _accountManagerController { get; set; }
-        private SteamAccountModel _currentSteamAccount { get; set; }
-        public EditWindow(IAccountManagerController accountManagerController, SteamAccountModel currentSteamAccount, string password)
+        private ISteamAccountModel _currentSteamAccount { get; set; }
+        public EditWindow(IAccountManagerController accountManagerController, ISteamAccountModel currentSteamAccount, string password)
         {
             _password = password;
             _accountManagerController = accountManagerController;

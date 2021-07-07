@@ -25,21 +25,21 @@ namespace SteamManager
             _iOService = iOService;
             _steamService = steamService;
         }
-        public ObservableCollection<SteamAccountModel> GetSteamAccountModels(string Password)
+        public ICollection<ISteamAccountModel> GetSteamAccountModels(string Password)
         {
             string decryptedData = _iOService.ReadData(Password);
 
-            ObservableCollection<SteamAccountModel> steamAccountModels = JsonSerializer.Deserialize<ObservableCollection<SteamAccountModel>>(decryptedData);
+            ICollection<ISteamAccountModel> steamAccountModels = JsonSerializer.Deserialize<ObservableCollection<SteamAccountModel>>(decryptedData);
 
             return steamAccountModels;
         }
-        public ObservableCollection<SteamAccountViewModel> GetSteamAccountViewModels(string Password)
+        public ICollection<ISteamAccountViewModel> GetSteamAccountViewModels(string Password)
         {
-            ObservableCollection<SteamAccountViewModel> steamAccountViewModels = new ObservableCollection<SteamAccountViewModel>();
-            ObservableCollection<SteamAccountModel> steamAccountModels = GetSteamAccountModels(Password);
+            ICollection<ISteamAccountViewModel> steamAccountViewModels = new ObservableCollection<ISteamAccountViewModel>();
+            ICollection<ISteamAccountModel> steamAccountModels = GetSteamAccountModels(Password);
 
             int index = 0;
-            foreach (SteamAccountModel steamAccount in steamAccountModels)
+            foreach (ISteamAccountModel steamAccount in steamAccountModels)
             {
                 SteamAccountViewModel steamAccountViewModel = new SteamAccountViewModel();
                 steamAccountViewModel.Index = index.ToString();
@@ -51,12 +51,12 @@ namespace SteamManager
             return steamAccountViewModels;
         }
 
-        public void AddSteamAccountModel(string password, SteamAccountModel newAccount)
+        public void AddSteamAccountModel(string password, ISteamAccountModel newAccount)
         {
             bool alreadyExists = false;
-            ObservableCollection<SteamAccountModel> accounts = GetSteamAccountModels(password);
+            ICollection<ISteamAccountModel> accounts = GetSteamAccountModels(password);
 
-            foreach (SteamAccountModel steamModel in accounts)
+            foreach (ISteamAccountModel steamModel in accounts)
             {
                 if (steamModel.UserName == newAccount.UserName)
                 {
@@ -75,9 +75,9 @@ namespace SteamManager
             _iOService.UpdateData(JsonSerializer.Serialize(accounts), password);
         }
 
-        public void LoginToSteamAccount(SteamAccountViewModel steamAccount)
+        public void LoginToSteamAccount(ISteamAccountViewModel steamAccount)
         {
-            _steamService.Login(steamAccount.UserName, steamAccount.Password, "");
+            _steamService.LoginAsync(steamAccount.UserName, steamAccount.Password, "");
         }
 
         public void DeleteSteamAccount(string userName, string password)
@@ -95,7 +95,7 @@ namespace SteamManager
         {
             ExportAccountModel exportAccountModel = new ExportAccountModel();
             ObservableCollection<SteamAccountModel> exportAccounts = new ObservableCollection<SteamAccountModel>();
-            ObservableCollection<SteamAccountModel> accounts = GetSteamAccountModels(password);
+            ICollection<ISteamAccountModel> accounts = GetSteamAccountModels(password);
 
             foreach (SteamAccountModel steamModel in accounts)
                 if (userNames.Contains(steamModel.UserName))

@@ -22,7 +22,6 @@ namespace SteamManager
         public AccountManager(IAccountManagerController acccountManagerController, IAccountManagerViewModel accountManagerViewModel)
         {
             _accountManagerViewModel = accountManagerViewModel;
-            _accountManagerViewModel.SteamAccountViewModels = new ObservableCollection<SteamAccountViewModel>();
             _acccountManagerController = acccountManagerController;
 
             this.DataContext = _accountManagerViewModel;
@@ -53,18 +52,18 @@ namespace SteamManager
             switch (clickedButton.Content)
             {
                 case ("Export"):
-                    Window exportWindow = new ExportPassword(_acccountManagerController, new string[] { ((SteamAccountViewModel)clickedButton.DataContext).UserName }, Password);
+                    Window exportWindow = new ExportPassword(_acccountManagerController, new string[] { ((ISteamAccountViewModel)clickedButton.DataContext).UserName }, Password);
                     exportWindow.Owner = this;
                     exportWindow.Show();
                     break;
                 case ("Edit"):
-                    Window editWindow = (new EditWindow(_acccountManagerController, ((SteamAccountViewModel)clickedButton.DataContext).Model, Password));
+                    Window editWindow = (new EditWindow(_acccountManagerController, ((ISteamAccountViewModel)clickedButton.DataContext).Model, Password));
                     editWindow.Owner = this;
                     editWindow.Show();
                     editWindow.Closed += RefreshSteam;
                     break;
                 case ("Login"):
-                    _acccountManagerController.LoginToSteamAccount((SteamAccountViewModel)clickedButton.DataContext);
+                    _acccountManagerController.LoginToSteamAccount((ISteamAccountViewModel)clickedButton.DataContext);
                     break;
             }
         }
@@ -82,7 +81,7 @@ namespace SteamManager
         {
             string[] steamUserNames = new string[_accountManagerViewModel.SteamAccountViewModels.Count];
             int count = 0;
-            foreach (SteamAccountViewModel steamAccountView in _accountManagerViewModel.SteamAccountViewModels)
+            foreach (ISteamAccountViewModel steamAccountView in _accountManagerViewModel.SteamAccountViewModels)
             {
                 steamUserNames[count] = steamAccountView.UserName;
                 count++;

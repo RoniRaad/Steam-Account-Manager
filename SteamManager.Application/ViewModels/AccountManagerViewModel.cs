@@ -11,9 +11,9 @@ namespace SteamManager.Application.ViewModels
     public class AccountManagerViewModel : IAccountManagerViewModel, INotifyPropertyChanged
     {
         public List<string> Games { get; set; }
-        ObservableCollection<SteamAccountViewModel> _steamAccountViewModels;
+        ICollection<ISteamAccountViewModel> _steamAccountViewModels;
 
-        public ObservableCollection<SteamAccountViewModel> SteamAccountViewModels
+        public ICollection<ISteamAccountViewModel> SteamAccountViewModels
         {
             get { return _steamAccountViewModels; }
             set

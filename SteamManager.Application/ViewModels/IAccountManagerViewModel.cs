@@ -9,6 +9,6 @@ namespace SteamManager.Application.ViewModels
         List<string> Games { get; set; }
         bool RunCommandLineArguments { get; set; }
         bool RunOnLogin { get; set; }
-        ObservableCollection<SteamAccountViewModel> SteamAccountViewModels { get; set; }
+        ICollection<ISteamAccountViewModel> SteamAccountViewModels { get; set; }
     }
 }
