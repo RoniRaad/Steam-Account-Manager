@@ -24,16 +24,15 @@ namespace SteamManager
     public partial class MainWindow : Window
     {
         private ILoginViewModel _loginViewModel { get; set; }
-        private AccountManager _accountManager { get; set; }
+        private readonly AccountManager _accountManager;
         public MainWindow(ILoginViewModel loginViewModel, AccountManager accountManager)
         {
             _accountManager = accountManager;
             _loginViewModel = loginViewModel;
-            this.DataContext = _loginViewModel;
+            DataContext = _loginViewModel;
 
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             InitializeComponent();
-
 
         }
         private void Login_Click(object sender, RoutedEventArgs e)
@@ -45,7 +44,7 @@ namespace SteamManager
             {
                 _accountManager.Password = hashedPassword;
                 _accountManager.Show();
-                this.Close();
+                Close();
             }
 
         }

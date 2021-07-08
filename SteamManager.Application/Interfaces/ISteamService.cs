@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace SteamManager.Infrastructure.Services
+namespace SteamManager.Application
 {
     public interface ISteamService
     {

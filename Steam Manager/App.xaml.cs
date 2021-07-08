@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SteamAccount;
+using SteamAccount.Application;
+using SteamManager.Application;
 using SteamManager.Application.ViewModels;
 using SteamManager.Infrastructure;
 using SteamManager.Infrastructure.Services;

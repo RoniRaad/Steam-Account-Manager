@@ -10,7 +10,7 @@ namespace SteamManager
 {
     public class SteamAccountViewModel : ISteamAccountViewModel
     {
-        public ISteamAccountModel Model { get; set; } = new SteamAccountModel();
+        public SteamAccountModel Model { get; set; } = new SteamAccountModel();
 
         public string DisplayName
         {
