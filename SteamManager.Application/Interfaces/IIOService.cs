@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace SteamManager.Infrastructure
+namespace SteamManager.Application
 {
     public interface IIOService
     {

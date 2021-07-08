@@ -10,7 +10,7 @@ namespace SteamManager.Application.Models
 {
     class ExportAccountModel
     {
-        public ICollection<ISteamAccountModel> accountModels { get; set; }
+        public ICollection<SteamAccountModel> accountModels { get; set; }
         public bool ReplaceCurrentModels { get; set; }
     }
 }

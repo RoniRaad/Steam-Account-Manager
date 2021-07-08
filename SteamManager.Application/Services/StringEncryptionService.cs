@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SteamAccount.Application;
+using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -110,9 +111,5 @@ namespace SteamAccount
             }
         }
 
-        public void SaveFile(string filePath, string fileName, string fileContents)
-        {
-            
-        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using SteamAccount;
-using SteamManager.Infrastructure;
+using SteamAccount.Application;
+using SteamManager.Application;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,7 +24,7 @@ namespace SteamManager
         {
             _stringEncryptionService = stringEncryptionService;
             _iOService = iOService;
-            Title = (_iOService.ValidateData()) ? "Login" : "Register";
+            Title = _iOService.ValidateData() ? "Login" : "Register";
         }
         public string ErrorMessage
         {
@@ -43,6 +44,13 @@ namespace SteamManager
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public class LoginResults
+        {
+            public int Passwoerd { get; }
+            public bool Failed { get; }
+        }
+
 
         /**
          * Returns the hashed password

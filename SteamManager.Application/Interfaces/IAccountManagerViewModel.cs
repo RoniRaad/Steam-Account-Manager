@@ -12,7 +12,7 @@ namespace SteamManager.Application.ViewModels
         bool RunOnLogin { get; set; }
         ICollection<ISteamAccountViewModel> SteamAccountViewModels { get; set; }
         ICollection<ISteamAccountViewModel> GetSteamAccountViewModels(string Password);
-        public void AddSteamAccountModel(string password, ISteamAccountModel newAccount);
+        public void AddSteamAccountModel(string password, SteamAccountModel newAccount);
         public void LoginToSteamAccount(ISteamAccountViewModel steamAccount);
         void DeleteSteamAccount(string userName, string password);
         public void ExportSteamAccounts(string file, string[] userNames, string password, string exportPassword);

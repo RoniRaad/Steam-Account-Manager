@@ -10,7 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SteamManager.Application\SteamManager.Application.csproj" />
     <ProjectReference Include="..\SteamManager.Infrastructure\SteamManager.Infrastructure.csproj" />
   </ItemGroup>
 

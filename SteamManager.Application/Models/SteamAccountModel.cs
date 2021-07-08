@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SteamManager.Models
 {
-    public class SteamAccountModel : ISteamAccountModel
+    public class SteamAccountModel
     {
         public string UserName { get; set; }
 

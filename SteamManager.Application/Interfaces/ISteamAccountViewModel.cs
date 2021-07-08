@@ -6,7 +6,7 @@ namespace SteamManager
     {
         string DisplayName { get; set; }
         string Index { get; set; }
-        ISteamAccountModel Model { get; set; }
+        SteamAccountModel Model { get; set; }
         string Password { get; set; }
         string UserName { get; set; }
     }

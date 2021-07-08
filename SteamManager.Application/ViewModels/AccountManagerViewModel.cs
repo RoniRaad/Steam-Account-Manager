@@ -1,7 +1,5 @@
 ﻿using SteamAccount;
 using SteamManager.Application.Models;
-using SteamManager.Infrastructure.Services;
-using SteamManager.Infrastructure;
 using SteamManager.Models;
 using System;
 using System.Collections.Generic;
@@ -11,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using SteamAccount.Application;
 
 namespace SteamManager.Application.ViewModels
 {
@@ -19,6 +18,13 @@ namespace SteamManager.Application.ViewModels
         private IIOService _iOService { get; set; }
         private IStringEncryptionService _stringEncryptionService;
         private ISteamService _steamService { get; set; }
+        public List<string> Games { get; set; }
+        public bool RunOnLogin { get; set; }
+        public bool RunCommandLineArguments { get; set; }
+        public string CommandLineArguments { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        ICollection<ISteamAccountViewModel> _steamAccountViewModels;
 
         public AccountManagerViewModel(IIOService iOService, IStringEncryptionService stringEncryptionService, ISteamService steamService)
         {
@@ -26,8 +32,7 @@ namespace SteamManager.Application.ViewModels
             _iOService = iOService;
             _steamService = steamService;
         }
-        public List<string> Games { get; set; }
-        ICollection<ISteamAccountViewModel> _steamAccountViewModels;
+
 
         public ICollection<ISteamAccountViewModel> SteamAccountViewModels
         {
@@ -41,33 +46,28 @@ namespace SteamManager.Application.ViewModels
             }
         }
 
-        public bool RunOnLogin { get; set; }
-        public bool RunCommandLineArguments { get; set; }
-        public string CommandLineArguments { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
         protected void NotifyPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
-        public ICollection<ISteamAccountModel> GetSteamAccountModels(string Password)
+        public ICollection<SteamAccountModel> GetSteamAccountModels(string Password)
         {
             string decryptedData = _iOService.ReadData(Password);
 
-            ICollection<ISteamAccountModel> steamAccountModels = JsonSerializer.Deserialize<ObservableCollection<SteamAccountModel>>(decryptedData).ToList<ISteamAccountModel>();
+            ICollection<SteamAccountModel> steamAccountModels = JsonSerializer.Deserialize<ObservableCollection<SteamAccountModel>>(decryptedData);
 
             return steamAccountModels;
         }
+
         public ICollection<ISteamAccountViewModel> GetSteamAccountViewModels(string Password)
         {
             ICollection<ISteamAccountViewModel> steamAccountViewModels = new ObservableCollection<ISteamAccountViewModel>();
-            ICollection<ISteamAccountModel> steamAccountModels = GetSteamAccountModels(Password);
+            ICollection<SteamAccountModel> steamAccountModels = GetSteamAccountModels(Password);
 
             int index = 0;
-            foreach (ISteamAccountModel steamAccount in steamAccountModels)
+            foreach (SteamAccountModel steamAccount in steamAccountModels)
             {
                 ISteamAccountViewModel steamAccountViewModel = new SteamAccountViewModel();
                 steamAccountViewModel.Index = index.ToString();
@@ -79,12 +79,12 @@ namespace SteamManager.Application.ViewModels
             return steamAccountViewModels;
         }
 
-        public void AddSteamAccountModel(string password, ISteamAccountModel newAccount)
+        public void AddSteamAccountModel(string password, SteamAccountModel newAccount)
         {
             bool alreadyExists = false;
-            ICollection<ISteamAccountModel> accounts = GetSteamAccountModels(password);
+            ICollection<SteamAccountModel> accounts = GetSteamAccountModels(password);
 
-            foreach (ISteamAccountModel steamModel in accounts)
+            foreach (SteamAccountModel steamModel in accounts)
             {
                 if (steamModel.UserName == newAccount.UserName)
                 {
@@ -111,9 +111,9 @@ namespace SteamManager.Application.ViewModels
 
         public void DeleteSteamAccount(string userName, string password)
         {
-            ICollection<ISteamAccountModel> updatedModels = new ObservableCollection<ISteamAccountModel>();
+            ICollection<SteamAccountModel> updatedModels = new ObservableCollection<SteamAccountModel>();
 
-            foreach (ISteamAccountModel steamAccount in GetSteamAccountModels(password))
+            foreach (SteamAccountModel steamAccount in GetSteamAccountModels(password))
                 if (steamAccount.UserName != userName)
                     updatedModels.Add(steamAccount);
 
@@ -122,16 +122,17 @@ namespace SteamManager.Application.ViewModels
 
         public void ExportSteamAccounts(string file, string[] userNames, string password, string exportPassword)
         {
-            ICollection<ISteamAccountModel> exportAccounts = new ObservableCollection<ISteamAccountModel>();
-            ICollection<ISteamAccountModel> accounts = GetSteamAccountModels(password);
+            ICollection<SteamAccountModel> exportAccounts = new ObservableCollection<SteamAccountModel>();
+            ICollection<SteamAccountModel> accounts = GetSteamAccountModels(password);
 
-            foreach (ISteamAccountModel steamModel in accounts)
+            foreach (SteamAccountModel steamModel in accounts)
                 if (userNames.Contains(steamModel.UserName))
                     exportAccounts.Add(steamModel);
 
 
             string hashedExportPassword = _stringEncryptionService.Hash(exportPassword);
-            string encryptedFileContents = _stringEncryptionService.EncryptString(hashedExportPassword, JsonSerializer.Serialize(exportAccounts));
+            string json = JsonSerializer.Serialize(exportAccounts);
+            string encryptedFileContents = _stringEncryptionService.EncryptString(hashedExportPassword, json);
 
             _iOService.WriteFile(file, encryptedFileContents);
         }
@@ -141,9 +142,9 @@ namespace SteamManager.Application.ViewModels
             string fileContents = _iOService.ReadFile(file);
             string decryptedContents = _stringEncryptionService.DecryptString(_stringEncryptionService.Hash(importPassword), fileContents);
 
-            ICollection<ISteamAccountModel> importedAccounts = JsonSerializer.Deserialize<ObservableCollection<SteamAccountModel>>(decryptedContents).ToList<ISteamAccountModel>();
+            ICollection<SteamAccountModel> importedAccounts = JsonSerializer.Deserialize<ObservableCollection<SteamAccountModel>>(decryptedContents).ToList<SteamAccountModel>();
 
-            foreach (ISteamAccountModel steamAccount in importedAccounts)
+            foreach (SteamAccountModel steamAccount in importedAccounts)
                 AddSteamAccountModel(password, steamAccount);
 
         }

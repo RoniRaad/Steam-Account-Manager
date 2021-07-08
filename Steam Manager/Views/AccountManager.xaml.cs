@@ -54,7 +54,7 @@ namespace SteamManager
                     exportWindow.Show();
                     break;
                 case ("Edit"):
-                    Window editWindow = (new EditWindow(_accountManagerViewModel, ((ISteamAccountViewModel)clickedButton.DataContext).Model, Password));
+                    Window editWindow = new EditWindow(_accountManagerViewModel, ((SteamAccountViewModel)clickedButton.DataContext).Model, Password);
                     editWindow.Owner = this;
                     editWindow.Show();
                     editWindow.Closed += RefreshSteam;

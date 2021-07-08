@@ -1,4 +1,4 @@
-﻿namespace SteamAccount
+﻿namespace SteamAccount.Application
 {
     public interface IStringEncryptionService
     {

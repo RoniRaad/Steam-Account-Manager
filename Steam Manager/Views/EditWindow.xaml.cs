@@ -27,14 +27,15 @@ namespace SteamManager
         private string _password { get; set; }
         private string _currentUsername { get; set; }
         private IAccountManagerViewModel _accountManagerController { get; set; }
-        private ISteamAccountModel _currentSteamAccount { get; set; }
-        public EditWindow(IAccountManagerViewModel accountManagerController, ISteamAccountModel currentSteamAccount, string password)
+        private SteamAccountModel _currentSteamAccount { get; set; }
+
+        public EditWindow(IAccountManagerViewModel accountManagerController, SteamAccountModel currentSteamAccount, string password)
         {
             _password = password;
             _accountManagerController = accountManagerController;
             _currentSteamAccount = currentSteamAccount;
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
-            this.DataContext = _currentSteamAccount;
+            DataContext = _currentSteamAccount;
             InitializeComponent();
             
         }
@@ -42,13 +43,13 @@ namespace SteamManager
         private void EditAccount_Add(object sender, RoutedEventArgs e)
         {
             _accountManagerController.AddSteamAccountModel(_password,_currentSteamAccount);
-            this.Close();
+            Close();
         }
 
         private void EditAccount_Remove(object sender, RoutedEventArgs e)
         {
             _accountManagerController.DeleteSteamAccount(_currentSteamAccount.UserName, _password);
-            this.Close();
+            Close();
         }
     }
 }
