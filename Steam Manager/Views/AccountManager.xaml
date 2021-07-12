@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         ResizeMode="CanMinimize"
         Title="Steam Manager" Height="416" Width="543"
-        Activated="RefreshSteam">
+        Activated="RefreshSteam" Closed="OnClosed">
     <Window.Resources>
         <SolidColorBrush x:Key = "lightyellow" Color = "#fdff96" />
         <SolidColorBrush x:Key = "darkyellow" Color = "#eef913" />
@@ -54,7 +54,7 @@
         <Button Content="Export" HorizontalAlignment="Left" Height="21" Margin="85,18,0,0" VerticalAlignment="Top" Width="49" Click="Export_Click"/>
         <CheckBox IsChecked="{Binding RunOnLogin}" x:Name="Run_Game" Content="Run game on login" Margin="38,326,350,27"/>
         <CheckBox IsChecked="{Binding RunCommandLineArguments}" x:Name="Run_Commandline"   Content="Execute command-line on login" Margin="195,326,130,27"/>
-        <ComboBox  x:Name="Games_ComboBox" ItemsSource="{Binding Games}"  HorizontalAlignment="Left" Height="23" Margin="38,343,0,0" VerticalAlignment="Top" Width="149" IsReadOnly="True">
+        <ComboBox  x:Name="Games_ComboBox" ItemsSource="{Binding Games}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedGame}" HorizontalAlignment="Left" Height="23" Margin="38,343,0,0" VerticalAlignment="Top" Width="149" IsReadOnly="True">
 
         </ComboBox>
 
