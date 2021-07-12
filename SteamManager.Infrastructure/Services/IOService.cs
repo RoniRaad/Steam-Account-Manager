@@ -1,14 +1,10 @@
-﻿using SteamAccount;
-using SteamAccount.Application;
+﻿using SteamAccount.Application;
 using SteamManager.Application;
+using SteamManager.Application.Model;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace SteamManager.Infrastructure
 {
@@ -49,11 +45,9 @@ namespace SteamManager.Infrastructure
 
             }
 
-                string encryptedData = File.ReadAllText($"{_dataPath}\\data.dat");
-                string decryptedData = _stringEncryptionService.DecryptString(password, encryptedData);
-                return _stringEncryptionService.DecryptString(password, encryptedData);
-
-
+            string encryptedData = File.ReadAllText($"{_dataPath}\\data.dat");
+            string decryptedData = _stringEncryptionService.DecryptString(password, encryptedData);
+            return _stringEncryptionService.DecryptString(password, encryptedData);
         }
         public void InitializeData(string password)
         {
@@ -92,6 +86,36 @@ namespace SteamManager.Infrastructure
         public string ReadFile(string filePath)
         {
             return File.ReadAllText(filePath);
+        }
+
+        public void SaveConfig(string contents)
+        {
+            WriteFile($"{_dataPath}\\config.conf", contents);
+        }
+
+        public string GetConfig()
+        {
+            try { 
+                return ReadFile($"{_dataPath}\\config.conf");
+            }
+            catch
+            {
+                return "[]";
+            }
+        }
+        public List<string[]> GetInstalledGamesManifest()
+        {
+            string[] steamAppFiles = Directory.GetFiles($"{FindSteamDrive()}\\Program Files (x86)\\Steam\\steamapps");
+            List<string[]> steamGames = new List<string[]>();
+
+            foreach (string file in steamAppFiles)
+                if (file.Contains("appmanifest"))
+                {
+                    string[] fileContents = File.ReadAllLines(file);
+                    steamGames.Add(fileContents);
+                }
+
+            return steamGames;
         }
     }
 }

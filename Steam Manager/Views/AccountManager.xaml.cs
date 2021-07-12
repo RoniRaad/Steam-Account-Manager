@@ -26,16 +26,17 @@ namespace SteamManager
 
             InitializeComponent();
         }
-
         private void StartSteamLoad()
         {
             _accountManagerViewModel.SteamAccountViewModels = _accountManagerViewModel.GetSteamAccountViewModels(Password);
         }
+
         public void RefreshSteam(object sender, EventArgs e)
         {
             this.Show();
             StartSteamLoad();
         }
+
         public void AddNewSteam(object sender, RoutedEventArgs e)
         {
             var addAccountPrompt = new AddAccount(_accountManagerViewModel, Password);
@@ -43,6 +44,7 @@ namespace SteamManager
             addAccountPrompt.Show();
             addAccountPrompt.Closed += RefreshSteam;
         }
+
         private void Steam_StackPanel_Click(object sender, RoutedEventArgs e)
         {
             Button clickedButton = (Button)e.OriginalSource;
@@ -87,6 +89,11 @@ namespace SteamManager
             exportWindow.Show();
             exportWindow.Owner = this;
             exportWindow.Closed += RefreshSteam;
+        }
+
+        private void OnClosed(object sender, EventArgs e)
+        {
+            _accountManagerViewModel.SaveSettings();
         }
     }
 }

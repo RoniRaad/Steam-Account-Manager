@@ -10,30 +10,27 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using SteamAccount.Application;
+using SteamManager.Application.Model;
+using System.Text.RegularExpressions;
+using System.Text.Json.Serialization;
 
 namespace SteamManager.Application.ViewModels
 {
     public class AccountManagerViewModel : IAccountManagerViewModel, INotifyPropertyChanged
     {
-        private IIOService _iOService { get; set; }
-        private IStringEncryptionService _stringEncryptionService;
-        private ISteamService _steamService { get; set; }
-        public List<string> Games { get; set; }
+        private readonly IIOService _iOService;
+        private readonly IStringEncryptionService _stringEncryptionService;
+        private readonly ISteamService _steamService;
+        [JsonIgnore]
+        public List<SteamGame> Games { get; set; }
+        public SteamGame SelectedGame { get; set; }
         public bool RunOnLogin { get; set; }
         public bool RunCommandLineArguments { get; set; }
         public string CommandLineArguments { get; set; }
-
         public event PropertyChangedEventHandler PropertyChanged;
-        ICollection<ISteamAccountViewModel> _steamAccountViewModels;
-
-        public AccountManagerViewModel(IIOService iOService, IStringEncryptionService stringEncryptionService, ISteamService steamService)
-        {
-            _stringEncryptionService = stringEncryptionService;
-            _iOService = iOService;
-            _steamService = steamService;
-        }
-
-
+        [JsonIgnore]
+        private ICollection<ISteamAccountViewModel> _steamAccountViewModels;
+        [JsonIgnore]
         public ICollection<ISteamAccountViewModel> SteamAccountViewModels
         {
             get { return _steamAccountViewModels; }
@@ -44,6 +41,60 @@ namespace SteamManager.Application.ViewModels
                 _steamAccountViewModels = value;
                 NotifyPropertyChanged(nameof(SteamAccountViewModels));
             }
+        }
+        public AccountManagerViewModel(IIOService iOService, IStringEncryptionService stringEncryptionService, ISteamService steamService)
+        {
+            _stringEncryptionService = stringEncryptionService;
+            _iOService = iOService;
+            _steamService = steamService;
+
+            SetSteamGames(_iOService.GetInstalledGamesManifest());
+            LoadSettings();
+
+        }
+
+        public void SaveSettings()
+        {
+            _iOService.SaveConfig(JsonSerializer.Serialize(this));
+        }
+        class AccountManagerSettings
+        {
+            public bool RunOnLogin { get; set; }
+            public SteamGame SelectedGame { get; set; }
+            public bool RunCommandLineArguments { get; set; }
+            public string CommandLineArguments { get; set; }
+        }
+        public void LoadSettings()
+        {
+            AccountManagerSettings saveView = JsonSerializer.Deserialize<AccountManagerSettings>(_iOService.GetConfig());
+            RunOnLogin = saveView.RunOnLogin;
+            SelectedGame = Games.Where((steamGame) => { return steamGame.AppId == saveView.SelectedGame.AppId; }).FirstOrDefault();
+            RunCommandLineArguments = saveView.RunCommandLineArguments;
+            CommandLineArguments = saveView.CommandLineArguments;
+
+            NotifyPropertyChanged(nameof(SelectedGame));
+        }
+
+        public void SetSteamGames(List<string[]> steamGamesManifestLines)
+        {
+            List<SteamGame> steamGames = new List<SteamGame>();
+
+            foreach (string[] gameManifestLines in steamGamesManifestLines)
+            {
+                SteamGame steamGame = new SteamGame();
+
+                string gameNameLine = gameManifestLines[5];
+                string gameName = Regex.Matches(gameNameLine, @"(?<="")(.*?)(?="")")[2].Value;
+
+                string appIdLine = gameManifestLines[2];
+                string appId = Regex.Matches(appIdLine, @"(?<="")(.*?)(?="")")[2].Value;
+
+                steamGame.Name = gameName;
+                steamGame.AppId = appId;
+                steamGames.Add(steamGame);
+            }
+
+            Games = steamGames;
         }
 
         protected void NotifyPropertyChanged(string propertyName)
@@ -106,7 +157,14 @@ namespace SteamManager.Application.ViewModels
 
         public void LoginToSteamAccount(ISteamAccountViewModel steamAccount)
         {
-            _steamService.LoginAsync(steamAccount.UserName, steamAccount.Password, "");
+            string args = "";
+            if (RunOnLogin)
+                args += $"-applaunch {SelectedGame.AppId}";
+
+            if (RunCommandLineArguments)
+                args += $" {CommandLineArguments}";
+
+            _steamService.LoginAsync(steamAccount.UserName, steamAccount.Password, args);
         }
 
         public void DeleteSteamAccount(string userName, string password)
