@@ -100,7 +100,7 @@ namespace SteamManager.Infrastructure
             }
             catch
             {
-                return "[]";
+                return "null";
             }
         }
         public List<string[]> GetInstalledGamesManifest()
