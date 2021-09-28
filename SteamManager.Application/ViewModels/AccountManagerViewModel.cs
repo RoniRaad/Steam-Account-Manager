@@ -16,7 +16,7 @@ using System.Text.Json.Serialization;
 
 namespace SteamManager.Application.ViewModels
 {
-    public class AccountManagerViewModel : IAccountManagerViewModel, INotifyPropertyChanged
+    public partial class AccountManagerViewModel : IAccountManagerViewModel, INotifyPropertyChanged
     {
         private readonly IIOService _iOService;
         private readonly IStringEncryptionService _stringEncryptionService;
@@ -57,16 +57,12 @@ namespace SteamManager.Application.ViewModels
         {
             _iOService.SaveConfig(JsonSerializer.Serialize(this));
         }
-        class AccountManagerSettings
-        {
-            public bool RunOnLogin { get; set; }
-            public SteamGame SelectedGame { get; set; }
-            public bool RunCommandLineArguments { get; set; }
-            public string CommandLineArguments { get; set; }
-        }
         public void LoadSettings()
         {
             AccountManagerSettings saveView = JsonSerializer.Deserialize<AccountManagerSettings>(_iOService.GetConfig());
+            if (saveView is null) 
+                saveView = new AccountManagerSettings();
+            
             RunOnLogin = saveView.RunOnLogin;
             SelectedGame = Games.Where((steamGame) => { return steamGame.AppId == saveView.SelectedGame.AppId; }).FirstOrDefault();
             RunCommandLineArguments = saveView.RunCommandLineArguments;

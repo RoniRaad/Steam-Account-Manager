@@ -105,8 +105,12 @@ namespace SteamManager.Infrastructure
         }
         public List<string[]> GetInstalledGamesManifest()
         {
-            string[] steamAppFiles = Directory.GetFiles($"{FindSteamDrive()}\\Program Files (x86)\\Steam\\steamapps");
             List<string[]> steamGames = new List<string[]>();
+
+            if (!Directory.Exists($"{FindSteamDrive()}\\Program Files (x86)\\Steam\\steamapps"))
+                return steamGames;
+
+            string[] steamAppFiles = Directory.GetFiles($"{FindSteamDrive()}\\Program Files (x86)\\Steam\\steamapps");
 
             foreach (string file in steamAppFiles)
                 if (file.Contains("appmanifest"))
